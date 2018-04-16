@@ -1,0 +1,267 @@
+.points-goods-block{
+  width: 45%;
+  height:100%;
+  float:left;
+  background:#fff;
+  text-align:center;
+  margin-left: 3.5%;
+  margin-top: 0.2rem;
+  border-radius: 0.1rem;
+}
+
+.points-goods-name{
+  font-Size: 0.26rem;
+  color:#333333;
+  margin: 0 auto;
+  //font-weight:bold;
+  padding: 0.5em 0.2em;
+  width: 85%;
+  border-bottom: 0.1em dashed #cccccc;
+}
+
+.imgMax{
+  height:100%;
+  width: 100%;
+}
+.imgMax .img{
+  width: 100%;
+  height: 2.4rem;
+  border-top-left-radius: 0.1rem;
+  border-top-right-radius: 0.1rem;
+}
+.points-bewrite{
+  font-Size: 0.22rem;
+  color: #666;
+  margin: 0 auto;
+  //font-weight:bold;
+  padding: 0.5em;
+  border-top:0.1em #a4a9b0 ;
+}
+
+.goods-price{
+  font-Size: 0.26rem;
+  color:#e2536b;
+  //font-weight:bold;
+  padding-left: 0.2rem;
+}
+
+.goods-points{
+  font-Size: 0.35rem;
+  color:#f4333c;
+  font-weight:bold;
+  padding: 0.5em 0;
+  .goods-price{
+    font-Size: 0.3rem;
+    color:gray;
+    font-weight:bold;
+    padding-left: 0.2rem;
+    text-decoration: line-through;
+  }
+}
+
+.goods-button{
+  font-Size: 0.24rem;
+  font-weight: 100;
+  color: #FFFFFF;
+  background: #5491d2;
+  padding: 0.3em;
+  border-radius: 2em;
+  width: 60%;
+  margin: 0 auto;
+  margin-bottom: 0.2rem;
+  margin-top: 0.05rem;
+  height: 32px;
+  line-height: 32px;
+}
+
+//详情样式
+.base-detail{
+  font-size: 0.3rem;
+  padding: 0.2rem;
+  //width: 100%;
+  background: #fff;
+  //border-bottom: 1px solid #c1c6cd;
+  .goodsName{font-size: 0.3rem;overflow: hidden;text-overflow: ellipsis;white-space:nowrap; }
+  .goods-points{font-size: 0.28rem;font-weight: normal;}
+  .goodsIntorduce{color: rgb(102, 102, 102);
+    font-size: 0.24rem;
+    margin-bottom: 0px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;}
+  .goods-price{color: rgb(154, 154, 154);    font-size: 0.28rem;font-weight: normal;}
+}
+
+.free-block{
+  font-size: 0.3rem;
+  padding: 2% 2%;
+  width: 96%;
+  background: #fff;
+  margin-top: 3%;
+  //border-top: 1px solid #c1c6cd;
+  margin-bottom:3%;
+  padding: 0.3rem 0.2rem;
+}
+
+.pointsGoodsBody{
+  margin: 0 auto;
+  width: 100%;
+  p{
+    margin: 0;
+  }
+  img{
+    width: 100%;
+  }
+}
+
+.buyGoods{
+  position: fixed;
+  bottom: 0px;
+  width: 92%;
+  padding: 3% 4%;
+  background: #FFFFFF;
+  text-align: center;
+  box-shadow: #cccccc;
+  box-shadow: 0px 0px 0.1rem #545353
+}
+
+.directorder{
+  padding:3% 5%;
+  background: #4ac1f4;
+  color: #FFFFFF;
+  font-size: 0.35rem;
+  display: block;
+  border-radius: 0.1rem;
+}
+.info-tab{
+  display:block;
+  margin-bottom: 10%;
+
+  .tap{
+    background: #FFFFFF;
+    color: #4ac1f4;
+    width: 100%;
+    padding: 0.25rem 0rem;
+    font-size: 0.3rem;
+    text-align: center;
+    border-bottom: 0.05rem solid #108ee9;
+  }
+}
+/*立即兑换*/
+.points_redeemNow{
+  //background: #ffffff;
+  margin-bottom: 2rem;
+  .redeeNow_img{}
+  .redeeNow_img .img{width: 1.65rem;height: 1.65rem;}
+  .reddemNow_name{
+    color: #252525;
+    font-size: 0.3rem;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+  .reddemNow_product{font-size: 0.28rem;color: #666666;text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;}
+  .redeeNow_weight{
+    color: #858585;
+    font-size:0.28rem;
+    }
+  .redeeNow_integral{color: #ea2f26;font-size: 0.3rem;}
+  .redeeNow_stepper{min-width: 1rem;}
+  .am-list-line{padding-right: 0px !important;}
+  .am-list-item{padding-left: 0px ;}
+  .am-list-item.am-list-item-active{background: none;}
+  .am-stepper{height: 0.4rem;line-height: 0.4rem;border: 1px solid #ddd;padding: 0px;}
+  .am-stepper .am-stepper-handler{width: 0.4rem;
+    height:0.4rem;line-height: 0.25rem;border:none;border-radius: 0px;}
+  .am-stepper.showNumber .am-stepper-handler-up{border-left: 1px solid #ddd;}
+  .am-stepper.showNumber .am-stepper-handler-down{border-right: 1px solid #ddd;}
+  .am-stepper .am-stepper-handler .am-icon-xxs{width: 0.2rem;height: 0.2rem;}
+  .am-stepper .am-stepper-input-wrap{height: 0.4rem;line-height: 0.4rem;}
+  .am-stepper .am-stepper-input-wrap .am-stepper-input{font-size: .3rem;padding-bottom: 10px;}
+  .integral_total{font-size: 0.28rem;
+    color: #666666;padding-left: 0.2rem;}
+  .confirm_exchange_box .am-list-content{padding: 0px;}
+  .confirm_exchange{height: 100%;background: #e70012;
+    color: #ffffff; }
+
+  .car_agreeItem{
+    .am-checkbox{
+      .am-checkbox-inner{
+        width:0.3rem;height:0.3rem;
+        top:27px;
+      }
+      .am-checkbox-inner:after{
+        top: 2px;
+        right: 13px;
+        width: 0.06rem;
+        height: 0.18rem;
+      }
+    }
+  }
+}
+@media screen and (max-width: 800px) {
+  .points_redeemNow .car_agreeItem .am-checkbox .am-checkbox-inner:after {
+          right: 7px;
+        }
+
+
+
+}
+/*确认兑换*/
+.points_confirmechange{
+  background: #ffffff;
+  .redeeNow_img{}
+  .redeeNow_img .img{width: 1.65rem;height: 1.65rem;}
+  .reddemNow_name{
+    color: #252525;
+    font-size: 0.3rem;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+  .reddemNow_product{font-size: 0.28rem;color: #666666;text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;}
+  .redeeNow_weight{
+    color: #858585;
+    font-size:0.24rem;
+  }
+  .redeeNow_integral{color: #858585;font-size: 0.24rem;}
+  .redeeNow_stepper{min-width: 1rem;}
+  .am-list-line{padding-right: 0px !important;}
+  .am-list-item{padding-left: 0px ;}
+  .am-list-item.am-list-item-active{background: none;}
+  .redeeNow_jifen{font-size: 0.28rem;
+    color: #333;text-align: right;}
+
+  .integral_total{font-size: 0.28rem;
+    color: #666666;padding-left: 0.2rem;}
+  .confirm_exchange_box .am-list-content{padding: 0px;}
+  .confirm_exchange{height: 100%;background: #e70012;
+    color: #ffffff; }
+
+}
+.extrared{
+.am-list-line:after{border-bottom: none;}
+.am-list-body div:not(:last-child) .am-list-line:after{border-bottom: none;}
+.span_integ .am-list-extra{color:#e60012;}
+}
+.am-list-body:after{
+  border:none;}
+.wx-orderbar-exchange{
+  height: 1.1rem;
+   border-top: none;
+  position: fixed;
+  bottom: 0.3rem;
+  width: 100%;
+  display: flex;
+  transition: bottom 0.2s;
+  z-index: 100;
+   background:none;
+.orderbar-exchange-btn{
+  height:0.75rem !important;
+  line-height:0.75rem !important;
+}
+}

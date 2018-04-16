@@ -1,0 +1,44 @@
+.cashier_list{
+  .cashier_list_item{
+    border-bottom: 1px solid #e5e5e5;
+    .am-list-line:after{border-bottom: none !important;}
+  }
+}
+.am-action-sheet{
+  .am-action-sheet-content{
+
+  }
+}
+
+//好友代付
+.wx-FriendsPay{
+  .FriendsPay_header_product{padding: 0.2rem 0.26rem;font-size: 0.28rem;color:#333;line-height: 0.4rem}
+  .FriendsPay_bg{width:100%;height: 0.1rem;}
+  .FriendsPay_user{
+    height:2rem;background: #fffef7;padding: 0px 0.26rem;
+    .FriendsPay_user_header,.FriendsPay_user_consignee{font-size: 0.28rem;color:#666;padding: 0.1rem 0px;}
+    .FriendsPay_user_header{}
+    .FriendsPay_user_payNum{font-size: 0.58rem;color:#f3302e;text-align: center;padding: 0.14rem 0px;}
+    .FriendsPay_user_consignee{text-align: right;}
+  }
+  .FriendsPay_button{
+    padding: 0.5rem 0.26rem 0rem;
+    .FriendsPay_Explain{
+      padding-top: 0.4rem;
+      .FriendsPay_Explain_title{font-size: 0.3rem;color:#333;padding-bottom: 0.1rem;}
+      .FriendsPay_Explain_list{font-size: 0.26rem;color:#999;padding-top: 0.1rem;}
+    }
+  }
+  .payment_information{
+    padding: 0.2rem 0.26rem;
+    .payment_information_top{font-size: 0.28rem;color:#666;padding-bottom: 0.2rem}
+    .payment_information_title{
+      font-size: 0.26rem;
+      color: #333;
+      height: 0.7rem;
+      overflow: hidden;
+      line-height: 0.35rem;
+      margin-bottom: 0.3rem;}
+    .payment_information_price{font-size: 0.24rem;color:#333;padding-top: 0.1rem;}
+  }
+}

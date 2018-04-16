@@ -1,0 +1,24 @@
+.wx-myEvaluteList {
+  .wx-EvaluteList-top {
+    text-align: center;
+    height: 1rem;
+    background-color: #FFFFFF;
+  }
+  .myEvaluteList_header{
+    padding: 0.1rem 0rem;
+    .am-segment-item{background: #ffffff;color: #333;border:none;}
+    .am-segment-item-selected{color: #00aade !important;}
+    .am-segment-item div div{padding-top: 0.1rem;}
+
+  }
+}
+.myEvaluteListfix-scroll{
+  .evalutelist_content1{
+    .evalute_name{font-size: 0.28rem;color:#333;}
+    .evalute_data{font-size:0.26rem; color:#999;float: right; }
+    .evalute_iconimg{padding-top: 0.1rem;
+    img{padding-right: 0.09rem;}
+    }
+  }
+  .evalute_product{font-size: 0.26rem;color:#333;}
+}

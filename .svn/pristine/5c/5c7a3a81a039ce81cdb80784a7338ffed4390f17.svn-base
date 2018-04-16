@@ -1,0 +1,284 @@
+/**
+ * 赠送好友组件
+ * Created by leimingtech-lhm on 2017/5/15.
+ */
+import React, {Component} from 'react';
+import {withRouter} from 'react-router'
+import {
+    WhiteSpace,
+    WingBlank,
+    Toast,
+    Flex,
+    List,
+    Button,
+    Popup,
+    SegmentedControl,
+    ActionSheet,
+    Icon
+
+} from 'antd-mobile';
+import {Img, CommonShare} from 'commonComponent';
+import {common} from 'common';
+import GievFriends from '../components/GievFriends';
+import * as BaseApi from 'common/api/base'
+import  wx from 'weixin-js-sdk';
+import * as couponApi from '../api/coupon';
+import '../routes/coupon.less'
+const Item = List.Item;
+/**图片在上面，文字在下面的布局 */
+
+
+class CouponList extends React.PureComponent {
+    constructor(props) {
+        super(props);
+        this.state = {
+            showStatus: 0,
+            clicked: false
+        }
+    }
+
+    /*分享展开显示*/
+    showShare = () => {
+        this.setState({
+            showStatus: this.state.showStatus == 0 ? 1 : 0
+        })
+    }
+
+    /*分享*/
+    showShareActionSheet = (memberCouponId) => {
+        BaseApi.getToken({
+            pageUrl: location.href.split('#')[0]
+        }).then(result => {
+            if (result.result == 1) {
+                Popup.show(
+                    <CommonShare />, {animationType: 'slide-up'}
+                );
+                var data = result.data[0];
+                wx.config({
+                    debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+                    appId: data.appid, // 必填，公众号的唯一标识
+                    timestamp: data.timestamp, // 必填，生成签名的时间戳
+                    nonceStr: data.noncestr, // 必填，生成签名的随机串
+                    signature: data.signature,// 必填，签名，
+                    jsApiList: [
+                        "chooseImage",// 选择图片
+                        "previewImage", //预览图片
+                        "uploadImage", //上传图片
+                        "downloadImage",  //下载图片
+                        "onMenuShareTimeline", //分享到朋友圈
+                        "onMenuShareAppMessage",//分享给好友
+                        // "onMenuShareQQ",
+                        // "onMenuShareWeibo",
+                        // "onMenuShareQZone",
+                        "hideOptionMenu",
+                        "showOptionMenu",
+                        "hideMenuItems",
+                        "showMenuItems",
+                        "hideAllNonBaseMenuItem",
+                        "showAllNonBaseMenuItem"
+                    ] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
+                });
+                const imgURl=common.SERVER_DOMAIN +'/upload/img/adv/share1.jpg'
+                wx.ready(function () {
+                    wx.hideAllNonBaseMenuItem(); //隐藏非基础功能按钮
+                    wx.showMenuItems({
+                        menuList: ["menuItem:share:appMessage", "menuItem:share:timeline", "menuItem:favorite"] // 要显示的菜单项，所有menu项见附录3
+                    });
+                    let shareUrl=common.SERVER_DOMAIN + '/thirdlogin/giveCoupon?memberCouponId=' + memberCouponId;
+                    //分享到朋友圈
+                    wx.onMenuShareTimeline({
+                        title: "快快来领取优惠券吧", // 分享标题
+                        link:shareUrl,  // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+                        imgUrl:imgURl, // 分享图标
+                        success: function () {
+                            // 用户确认分享后执行的回调函数
+                            couponApi.raiseGive({memberCouponId: memberCouponId}).then(result => {
+                                if(result.result==1){
+                                    Toast.success("分享成功！",2,window.location.reload)
+                                }else {
+                                    Toast.fail(result.msg,2,window.location.href=common.SERVER_PATH+"/home.html");
+                                }
+                            })
+                        },
+                        cancel: function () {
+                            // 用户取消分享后执行的回调函数
+                            Toast.fail("您已取消分享")
+                        }
+                    });
+                    //分享给好友
+                    wx.onMenuShareAppMessage({
+                        title: "快快来领取优惠券吧", // 分享标题
+                        desc: '手快有，手慢无~', // 分享描述
+                        link:shareUrl, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+                        imgUrl:imgURl, // 分享图标
+                        type: '', // 分享类型,music、video或link，不填默认为link
+                        dataUrl: '', // 如果type是music或video，则要提供数据链接，默认为空
+                        success: function () {
+                            // 用户确认分享后执行的回调函数
+                            couponApi.raiseGive({memberCouponId: memberCouponId}).then(result => {
+                                if(result.result==1){
+                                    Toast.success("分享成功！",2,window.location.reload)
+                                }else {
+                                    Toast.fail(result.msg,2,window.location.href=common.SERVER_PATH+"/home.html");
+                                }
+                            })
+                        },
+                        cancel: function () {
+                            // 用户取消分享后执行的回调函数
+                            Toast.fail("您已取消分享")
+                        }
+                    });
+                });
+            } else {
+                Toast.fail(result.msg)
+            }
+        });
+    }
+
+
+    render() {
+        const {showStatus, shareParese} = this.state;
+        const {shopActivity, shopActivityPromotionRule,item} = this.props;
+        const {shopActivityMembership}=shopActivity;
+        console.log(item);
+        console.log(shopActivityMembership);
+        return <div>
+            <Flex className="coupon_list_box1">
+                <Flex.Item style={{flex: 1}}>
+                    {/*其他情况*/}
+                    {
+                        (shopActivity.storeId == 0 && shopActivity.allStoreUse == 1 ) &&<Flex
+                            style={{background: 'url(./assets/img/weiqing/youhuiquan-03@2x.png) center center / 100% 100% no-repeat'}}
+                            className="coupon_list_img" direction="column">
+                            <div className="coupon_list_value"><span
+                                style={{fontSize: '0.22rem'}}>￥</span>{shopActivityPromotionRule.couponSource}</div>
+                            <div className="coupon_list_txt">满{shopActivityPromotionRule.limitWhere}元可用</div>
+                        </Flex>
+                    }
+                    {/*自营*/}
+                    {
+                        (shopActivity.storeId == 0 && shopActivity.allStoreUse != 1)&& <Flex style={{background:'url(./assets/img/weiqing/youhuiquan-02@2x.png) center center / 100% 100% no-repeat'}} className="coupon_list_img" direction="column">
+                            <div className="coupon_list_value"><span style={{fontSize:'0.22rem'}}>￥</span>{shopActivityPromotionRule.couponSource}</div>
+                            <div className="coupon_list_txt">满{shopActivityPromotionRule.limitWhere}元可用</div>
+                        </Flex>
+                    }
+                    {/*商家*/}
+                    {
+                        (shopActivity.storeId != 0 && shopActivity.allStoreUse == 0) && <Flex style={{background:'url(./assets/img/weiqing/youhuiquan-01@2x.png) center center / 100% 100% no-repeat'}} className="coupon_list_img" direction="column">
+                            <div className="coupon_list_value"><span style={{fontSize:'0.22rem'}}>￥</span>{shopActivityPromotionRule.couponSource}</div>
+                            <div className="coupon_list_txt">满{shopActivityPromotionRule.limitWhere}元可用</div>
+                        </Flex>
+                    }
+                </Flex.Item>
+                <Flex.Item style={{flex: 2, marginLeft: '0.1rem', height: '1.5rem'}}>
+                    <div style={{paddingLeft: '0rem'}}>
+                        <div className="coupon_list_title">
+                            {/*商家*/}
+                            {
+                                (shopActivity.storeId != 0 && shopActivity.allStoreUse == 0) && <span style={{
+                                    padding: '0.05rem 0.1rem',
+                                    fontSize: '0.2rem',
+                                    color: '#fff',
+                                    background: '#e3536c',
+                                    borderRadius: '0.3rem',
+                                    marginRight: '0.15rem',
+                                    display:'inline-block',
+                                    width:'0.8rem',textAlign:'center'
+                                }} >{(shopActivity.storeName).substring(0,4)}</span>
+                            }
+                            {/*自营*/}
+                            {
+                                (shopActivity.storeId == 0 && shopActivity.allStoreUse != 1) && <span style={{
+                                    padding: '0.05rem 0.1rem',
+                                    fontSize: '0.2rem',
+                                    color: '#fff',
+                                    background: '#ffa920',
+                                    borderRadius: '0.3rem',
+                                    marginRight: '0.15rem'
+                                }}>卫青自营</span>
+                            }
+                            {/*其他情况*/}
+                            {
+                                (shopActivity.storeId == 0 && shopActivity.allStoreUse == 1 ) && <span style={{
+                                    padding: '0.05rem 0.1rem',
+                                    fontSize: '0.2rem',
+                                    color: '#fff',
+                                    background: '#77b4f5',
+                                    borderRadius: '0.3rem',
+                                    marginRight: '0.15rem',display:'inline-block',
+                                    width:'0.8rem',textAlign:'center'
+                                }}>全品类</span>
+                            }
+
+                            {
+                                shopActivity.goodsType == 0 && shopActivity.allStoreUse == 1 ? '部分商家' : null//商家店铺
+                            }
+                            {
+                                shopActivity.goodsType == 0 && shopActivity.allStoreUse == 0 ? '全部商品' : null
+                            }
+                            {
+                                shopActivity.goodsType== 1? '指定商品分类' : null
+                            }
+                            {
+                                shopActivity.goodsType== 2 ? '指定商品类型' : null
+                            }
+                            {
+                                shopActivity.goodsType== 3 ? '指定品牌' : null
+                            }
+                            {
+                                shopActivity.goodsType== 4 ? '指定商品' : null
+                            }
+                            可用
+                        </div>
+                        <Flex justify="between" style={{padding: '0.1rem 0px'}}>
+                            <span style={{color: '#999', fontSize: '0.22rem'}}>{shopActivity.startTimeStr.substr(0, 10)}-{shopActivity.endTimeStr.substr(0, 10)}</span>
+                        </Flex>
+                    </div>
+                    <Flex justify="between" style={{borderTop: '1px dashed #e5e5e5', padding: '0rem 0px'}}
+                          onClick={() => this.showShare() }>
+                        <span style={{fontSize: '0.22rem', color: '#999'}}>详细信息</span>
+                        <span><img src="./assets/img/weiqing/wdyhq-01@2x.png"
+                                   style={{width: '0.16rem', height: '0.16rem', paddingBottom: '0.1rem'}}/></span>
+                    </Flex>
+                </Flex.Item>
+            </Flex>
+            {
+                showStatus == 1 ? <div className="give-coupon-box">
+                    <div className="coupon_list_condition">
+                        <div>会员限制：
+                            {
+                                shopActivityMembership.memberLevel == '' ? '全部会员':`${shopActivityMembership.memberLevel}`
+                            }
+
+                        </div>
+                        <div>
+                            {
+                            shopActivity.goodsType == 0 && shopActivity.allStoreUse == 1 ? '指定商家' : null//商家店铺
+                        }
+                            {
+                                shopActivity.goodsType == 0 && shopActivity.allStoreUse == 0 ? '适用范围' : null
+                            }
+                            {
+                                shopActivity.goodsType== 1? '指定分类' : null
+                            }
+                            {
+                                shopActivity.goodsType== 2 ? '指定类型' : null
+                            }
+                            {
+                                shopActivity.goodsType== 3 ? '指定品牌' : null
+                            }
+                            {
+                                shopActivity.goodsType== 4 ? '指定商品' : null
+                            }：{item.limitInfo}</div>
+                    </div>
+                    <div className="give-coupon-block" onClick={() => this.showShareActionSheet(this.props.activityId)}>
+                    <img src="./assets/img/weiqing/wdyhq-04@2x.png"
+                         style={{width: '0.40rem', height: '0.28rem', marginRight: '0.15rem'}}/>赠送好友
+                </div>
+                </div> : ''
+            }
+
+        </div>
+    }
+}
+export default withRouter(CouponList)

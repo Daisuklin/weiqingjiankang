@@ -1,0 +1,22 @@
+ .am-grid .am-flexbox .am-flexbox-item .am-grid-item-contain .am-grid-icon {
+   height: 50%;
+ }
+ .am-grid{padding: 0.1rem 0rem; background-color: #ffffff;}
+ .am-grid .am-flexbox .am-flexbox-item .am-grid-item-content{/*padding-bottom: 0.2rem;*/padding-top: 0.2rem;
+  }
+ .homeFunctionBlock_list{
+   padding:0.2rem 0px;
+   .am-flexbox{
+     .am-grid-item{
+       .am-grid-item-content{position: absolute !important;
+       .am-flexbox{margin-bottom: 0.2rem;}
+       }
+     }
+     .am-grid-item:before{}
+   }
+
+ }
+
+ .am-grid .am-flexbox{
+   height: 100%;
+ }

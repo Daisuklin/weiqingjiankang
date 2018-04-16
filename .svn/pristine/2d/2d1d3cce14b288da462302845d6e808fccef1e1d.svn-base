@@ -1,0 +1,3 @@
+.homeFloorGoods_item{
+   .am-list-line .am-list-content{padding-top: 0px;}
+}

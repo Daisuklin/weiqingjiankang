@@ -1,0 +1,39 @@
+.wx-ConsultList {
+  .am-list-item .am-list-line .am-list-content {
+    font-size: .24rem;
+  }
+  .list-view-section-body{
+    .goods_consultlist:not(:last-child){border-bottom: 1px solid #e5e5e5;}
+  }
+}
+.am-list-view-scrollview-content{
+  position: static !important;
+}
+.goods_consultlist{
+  .consulutlist_imgl{float: left;}
+  .consulutlist_imgr{float: left;padding-left: 0.2rem;padding-top: 0.1rem}
+  .goods_consultlist_text{
+    padding-left: 1.1rem;
+    .goods_consultlist_question{overflow: hidden;}
+    .goods_consultlist_answer{
+      //display: inline-block;
+      word-wrap: break-word;
+      overflow: hidden;
+    }
+
+  }
+
+}
+
+/*提交咨询*/
+.wx-consultEdit{
+  padding-bottom: 0.3rem;
+  .am-list{
+    .am-list-body{border-top: none;}
+    .am-list-body:after{border-bottom: none;}
+    .am-textarea-item{
+      textarea{font-size: 0.28rem;color:#666;}
+    }
+  }
+
+}

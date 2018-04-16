@@ -1,0 +1,175 @@
+import React, { Component } from 'react'
+import { withRouter } from 'react-router'
+import {
+    Modal,
+  SearchBar,
+    Toast,
+  WingBlank,
+    List,
+  Flex,
+  Icon,
+  Button
+} from 'antd-mobile';
+import * as indexSearchApi from '../api/goods'
+import {Map} from 'immutable';
+import {Img} from 'commonComponent';
+import './gotoSearch.less'
+// import ListItem from "antd-mobile/lib/list/ListItem.web.d";
+class GoodsGotoSearch extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            value: '',
+            indexSearch: Map(),
+            init: 'false',
+            adv: null,
+            searchList: [],
+            type: "0"
+        }
+    }
+
+    componentDidMount() {
+        indexSearchApi.indexSearch({}).then(result => {
+            if (result.result == 1) {
+                let searchList = [];
+                const indexSearch = result.data;
+                let searchText = localStorage.getItem('searchList')
+                if (searchText) {
+                    searchText = localStorage.getItem('searchList').split(',')
+                }else{
+                    searchText=[]
+                }
+                // const searchText=localStorage.getItem('searchList')
+                console.log(searchText);
+                this.setState({
+                    // ...result.data
+                    indexSearch: indexSearch,
+                    adv: indexSearch.adv,
+                    searchList: searchText
+                })
+            }
+        })
+    }
+
+    onSubmit = (value) => {
+        let searchList = localStorage.getItem('searchList');
+        if (searchList) {
+            let searchListStr = '';
+            searchListStr = value + ',' + searchList;//将搜索记录储存成字符串
+            localStorage.setItem('searchList', searchListStr);//保存token值，即历史记录
+        } else {
+            localStorage.setItem('searchList', value);
+        }
+        this.props.router.push(`/search/keywordSearch/${value}`)
+    }
+
+	/*清空历史搜索记录*/
+    clearHistory = (item) => {
+        // 清空处理
+        Modal.alert('提示', '是否全部清除?', [
+            {text: '取消'},
+            {
+                text: '确定',
+                onPress: () => {
+                    console.log(this.state);
+                    this.setState({
+                        searchList: []
+                    })
+                }
+            }
+        ]);
+    }
+
+    onChange = (value) => {
+        this.setState({
+            value: value
+        });
+    };
+
+    render() {
+        const {indexSearch, adv, searchList} = this.state;
+        const {hotGoodsClass} = indexSearch;
+        // console.log(adv);
+        console.log(searchList);
+        if (!this.state.init) {
+            return null;
+        }
+        return (
+            <div className="wx-gotoSearch">
+                <Flex style={{background: '#efeff4', zIndex: '10000'}}>
+                    <Icon type='left' onClick={() => this.props.router.goBack()}/>
+                    <Flex.Item>
+                        <SearchBar
+                            placeholder="请输入商品名称"
+                            autoFocus
+                            onSubmit={value => {
+                                this.props.router.push(`/search/keywordSearch/${value}`)
+                            }}
+                            onChange={this.onChange}
+                        />
+                    </Flex.Item>
+                    <button onClick={() => this.onSubmit(this.state.value)}
+                            style={{padding: '0.26rem 0.26rem 0.26rem 0.05rem', background: '#efeff4', border: '0',fontSize:'0.28rem'}}>搜索
+                    </button>
+                </Flex>
+                <div className="search_hot">
+                    <div style={{fontSize: '0.26rem', color: '#252525', padding: '0.2rem 0px 0.3rem'}}>热门搜索</div>
+                    <Flex style={{padding: "0px 0rem"}} wrap="wrap" justify="start" className="search_hot_btn">
+                        {
+                            hotGoodsClass && hotGoodsClass.map((goodsClass, index) => {
+                                return <div key={index}>
+                                    <Button style={{
+                                        minWidth: '1.4rem',
+                                        height: '0.6rem',
+                                        fontSize: '0.26rem',
+                                        lineHeight: '0.6rem',
+                                        color: '#333',
+                                        backgroundColor: '#f0f2f5',
+                                        borderRadius: '3px',
+                                        borderColor: '#f5f5f5'
+                                    }}
+                                            type="ghost"
+                                            onClick={() => {
+                                                this.props.router.push(`/search/gcIdSearch/${goodsClass.gcId}`)
+                                            }}
+                                    >{(goodsClass.gcName).substring(0,4)}</Button>
+                                </div>
+                            })
+                        }
+                    </Flex>
+
+                </div>
+                {
+                    adv&& <div style={{padding: '0.2rem 0rem', height: '2rem'}} onClick={() => window.location.href = `${adv.advUrl}`}>
+                            <Img src={adv.resUrl} style={{width: '100%', height: '2rem'}}/>
+                        </div>
+                }
+                <div style={{padding: '0.2rem 0rem', background: '#fff'}}>
+                    <div style={{fontSize: '0.26rem', color: '#252525', padding: '0.2rem 0.26rem'}}
+                         onClick={() => console.log(searchList.length)}>历史搜索
+                    </div>
+                    <List className="history_Search">
+                        {
+                            searchList && searchList.map((searchListtxt, index) => {
+
+                                if (index < 10 && searchListtxt!='undefined' && searchListtxt!='') {
+                                    return <div key={index} onClick={() => {
+                                        this.props.router.push(`/search/keywordSearch/${searchListtxt}`)
+                                    }}>{searchListtxt}</div>
+                                }
+
+                            })
+                        }
+                    </List>
+                    <div style={{padding: '0.3rem 1rem'}}><Button style={{fontSize: '0.26rem', color: '#666'}}
+                                                                  onClick={() => {
+                                                                      this.clearHistory()
+                                                                  }}>清空历史记录</Button></div>
+                </div>
+                {/*<WingBlank>历史搜索</WingBlank>*/}
+            </div>
+        )
+    }
+}
+
+export default withRouter(GoodsGotoSearch);

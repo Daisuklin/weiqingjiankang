@@ -1,0 +1,9 @@
+.myEvaluate-scroll{
+  .myEavaluate_list{
+    padding: 0.2rem 0.26rem;
+    background: #ffffff;
+    border-bottom: 1px solid #e5e5e5;
+    .evaluate_name{font-size: 0.28rem;color:#333;padding-bottom: 0.15rem;}
+    .evaluate_product{font-size: 0.26rem;color:#666;margin-bottom: 0.15rem}
+  }
+}

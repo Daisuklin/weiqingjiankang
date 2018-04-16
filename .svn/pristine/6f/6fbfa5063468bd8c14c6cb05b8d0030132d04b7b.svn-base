@@ -1,0 +1,100 @@
+import React, {Component} from 'react'
+import {withRouter} from 'react-router'
+import {
+    WhiteSpace,
+    WingBlank,
+    Modal,
+    Toast,
+    Flex,
+    Button,
+    Checkbox,
+    List,
+    Icon,
+    Stepper
+} from 'antd-mobile';
+import {Img} from 'commonComponent';
+import {common} from 'common';
+
+import './CartShop.less';
+const Item = List.Item;
+const AgreeItem = Checkbox.AgreeItem;
+
+class CartShop extends Component {
+    constructor(props) {
+        super(props);
+    }
+
+    // 删除购物车商品
+    delCart = (id) => {
+        Modal.alert('提示', '确定要删除吗', [
+            {text: '取消'},
+            {
+                text: '确定',
+                onPress: () => {
+                    this.props.delCart(id);
+                }
+            },
+        ]);
+    }
+
+    // 更新购物车数量
+    updateCart = (goods, num) => {
+        if(num>=1) {
+            this.props.updateCart(goods, num);
+        }
+    }
+
+    // 选择购物车
+    checkGoods = (id, e) => {
+        this.props.checkGoods(id, e.target.checked);
+    }
+
+    //跳转至详情页
+    gotoGoodsDetail = (pointsGoodsId) => {
+        common.gotoPointsGoodsDetail({
+            pointsGoodsId: pointsGoodsId
+        });
+    }
+
+    render() {
+        const {goods} = this.props;
+        return <List className="cartShop_list">
+            <Item style={{padding: '0.1rem 0.26rem'}}>
+                <Flex>
+                    <Checkbox checked={goods.checked} onChange={e => this.checkGoods(goods.pgoodsId, e)}
+                              className="cartShop_body_checkbox"></Checkbox>
+                    <Img src={goods.pgoodsImage} style={{height: '1.62rem', width: '1.62rem'}}/>
+                    <Flex.Item>
+                        <div className='text-overflow-hidden'
+                             onClick={() => gotoGoodsDetail(goods.id)}>{goods.pgoodsName}</div>
+                        <div className="cartShop_Stepper">
+                            <WhiteSpace size="xl"/>
+                            <div style={{
+                                fontSize: '0.3rem',
+                                color: '#e2526b',
+                                float: 'left'
+                            }}>{`${goods.pgoodsPoints}积分`}</div>
+                            <Stepper showNumber min={1} max={100} value={goods.pgoodsChoosenum}
+                                     onChange={(val) => this.updateCart(goods, val)}
+                                     style={{width: '1.6rem', float: 'right'}}/>
+                            <Button style={{
+                                float: 'right',
+                                padding: '0px 0.15rem',
+                                fontSize: '0.24rem',
+                                color: '#666',
+                                height: '0.42rem',
+                                lineHeight: '0.42rem',
+                                borderRadius: '3px',
+                                marginRight: '0.1rem',
+                                background: '#efefef'
+                            }} size='small' inline onClick={() => this.delCart(goods.id)}>删除</Button>
+                        </div>
+                    </Flex.Item>
+                </Flex>
+            </Item>
+            <WhiteSpace size="md" style={{background: '#f5f5f9'}}/>
+        </List>
+    }
+}
+
+export default CartShop;

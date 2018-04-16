@@ -1,0 +1,45 @@
+import React, { Component, PropTypes } from 'react';
+import { Router, Route, IndexRoute } from 'react-router';
+import App from 'container/appView';
+
+import bargain from './bargain';
+import bargargainDetail from './bargargainDetail';
+import groupBargainDetail from './groupBargainDetail';
+import barGainOrderList from './barGainOrderList';
+import helpBargainDetail from './helpBargainDetail';
+import barginOrder from './barginOrder';
+import invoice from './invoice'
+import address from './address';
+import addressAdd from './addressAdd';
+import addressEdit from './addressEdit';
+import orderDetail from './orderDetail';
+import applyAfterSale from './applyAfterSale';
+import commentList from './commentList';
+import comment from './comment';
+
+const routesConfig = (<Route path="/" component={App}>
+  <Route path="/bargain/:storeId" component={bargain} title='砍价'/>
+  <Route path='/bargargainDetail/:id' component={bargargainDetail} title='砍价详情'/>
+  <Route path='/groupBargainDetail/:specId' component={groupBargainDetail} title='亲友团砍价'/>
+  <Route path='/helpBargainDetail/:id/:bargainId' component={helpBargainDetail} title='帮他砍价'/>
+  <Route path='/address' component={address} title='收货地址管理' />
+  <Route path='/addressAdd' component={addressAdd} title='添加地址' />
+  <Route path='/addressEdit' component={addressEdit} title='编辑地址'/>
+  <Route path='/invoice/:invoiceShow/:invContent' component={invoice} title='发票信息' />
+  <Route path='/bargainPurchase/:bargainId' component={barginOrder} title='提交订单'/>
+  <Route path='/barGainOrderList/(:type)' component={barGainOrderList} title='我的砍价'/>
+  <Route path='/orderDetail/(:id)' component={orderDetail} title='我的砍价详情'/>
+  <Route path='/applyAfterSale' component={applyAfterSale} title='退款申请' />
+  <Route path='/commentList' component={commentList} title='评价晒单' />
+  <Route path='/comment' component={comment} title='评价晒单'/>
+</Route>)
+
+function Routes({ history }) {
+  return (
+    <Router history={history}>
+      {routesConfig}
+    </Router>
+  );
+}
+
+export default Routes;

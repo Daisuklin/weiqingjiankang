@@ -1,0 +1,66 @@
+.wx-GoodsSearchSpecFilter {
+  width: 6rem;
+  height: 100%;
+  background-color: white;
+  z-index: 1000;
+  position: absolute;
+  right: 0;
+  top: 0;
+  font-size: .24rem;
+  padding-top: 0.1rem;
+
+  .price-filter {
+    padding: 0.2rem 0.26rem;
+    .price_between{
+       .am-input-item{
+         padding: 0px 0.1rem;
+         .am-input-control{
+           padding: 0.1rem 0.15rem;background: #f5f5f5;
+           input{
+             font-size: 0.26rem;color:#aaa;
+           }
+         }
+       }
+      .am-list-item.am-input-item:after{border-bottom: none;}
+    }
+    .am-list-item {
+      z-index: 1001;
+    }
+  }
+
+  .spec-value-list {
+    padding-top: 0.1rem;
+    padding-bottom: 0.1rem;
+  }
+
+  .spec-value {
+    .am-button {
+      font-size: .24rem;
+      width: 1.5rem;
+      height: .5rem;
+      line-height: .5rem;
+      margin: 0.1rem;
+      span {
+        height: .5rem;
+        line-height: .5rem;
+      }
+    }
+    .am-button-primary{
+      background: #5491d2 !important;
+      border-color: #5491d2 !important;
+      color: #ffffff !important;
+    }
+  }
+  .spec-btn {
+    font-size: .26px;
+    position: fixed;
+    bottom: 0;
+    height: 0.9rem;
+    width: 6rem;
+    .am-button {
+      padding: 0;
+      margin: 0;
+      width: 3rem;
+    }
+  }
+}

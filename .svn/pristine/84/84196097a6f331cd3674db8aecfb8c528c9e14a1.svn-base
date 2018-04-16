@@ -1,0 +1,10 @@
+ .index-banner {
+   .slider-list {
+     height: 3.66rem!important;
+     img {
+       width: 100%;
+       height: 3.66rem;
+       position: static;
+     }
+   }
+ }

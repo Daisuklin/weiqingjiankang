@@ -1,0 +1,53 @@
+.wx-goods-detail-spec-group {
+
+  .am-tag-active {
+    background-color: #fff;
+    color: #E43F47;
+    border: 1PX solid #E43F47;
+  }
+
+  .am-tag {
+    border-radius: .06rem;
+    display: inline-block;
+    position: relative;
+    font-size: .28rem;
+    padding: 0rem .3rem;
+    margin: 0.1rem;
+    text-align: center;
+    height: .48rem;
+    line-height: .48rem;
+    color: #5491d2;
+    border: 2PX solid #5491d2;
+    float: left;
+  }
+
+  .am-tag-normal {
+    background-color: #fff;
+    color: #666;
+    border: 2PX solid #666;
+  }
+
+}
+.goodsSpec_list{
+  .am-list-header{
+    padding: 0px 0.26rem;
+
+  }
+}
+/*递增按钮*/
+.goodsSpec_stepper{
+  .am-stepper{height: 0.4rem;line-height: 0.4rem;border: 1px solid #ddd;padding: 0px;}
+  .am-stepper .am-stepper-handler{width: 0.4rem;
+    height:0.4rem;line-height: 0.25rem;border:none;border-radius: 0px;}
+  .am-stepper.showNumber .am-stepper-handler-up{border-left: 1px solid #ddd;}
+  .am-stepper.showNumber .am-stepper-handler-down{border-right: 1px solid #ddd;}
+  .am-stepper .am-stepper-handler .am-icon-xxs{width: 0.2rem;height: 0.2rem;}
+  .am-stepper .am-stepper-input-wrap{height: 0.4rem;line-height: 0.4rem;}
+  .am-stepper .am-stepper-input-wrap .am-stepper-input{font-size: .3rem;padding-bottom: 10px;}
+}
+
+/*评论区域*/
+.goods-Detail-evaluate{
+  .gevalImageShow_img{}
+}
+

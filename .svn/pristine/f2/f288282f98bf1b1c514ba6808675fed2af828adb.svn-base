@@ -1,0 +1,124 @@
+/**
+ * 我的物流信息
+ * Created by leimingtech-lhm on 2017/5/12.
+ */
+import React, { Component } from 'react'
+import { withRouter } from 'react-router'
+import {
+  WhiteSpace,
+  WingBlank,
+  Flex,
+    Button,
+    List
+} from 'antd-mobile';
+import {Map} from 'immutable';
+import {Img} from 'commonComponent';
+// import * as memberApi from '../api/member';
+import './viewLogistics.less'
+const Item = List.Item;
+class ViewLogistics extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+
+        myEvaluate:Map(),
+
+        init:'false',
+        pageNo: 1,
+
+    }
+  }
+
+    componentDidMount() {
+
+    // memberApi.evaluateGoods({
+    //   pageNo: 1,
+    //   pageSize: 50
+    // }).then(result => {
+    //   if (result.result == 1) {
+    //     const myEvaluate=result.data;
+    //     this.setState({
+    //       // ...result.data
+    //         myEvaluate:myEvaluate,
+    //         evaluate:myEvaluate
+    //     })
+    //   }
+    // })
+  }
+
+
+
+  gotoEvaluateDetail=(EvaluateDetail)=>{
+      this.props.router.push({
+          pathname: '/myEvaluateDetail',
+          state: {
+              myEvaluate:EvaluateDetail
+          }
+      })
+
+  }
+
+
+  render() {
+      // if (!this.state.init) {
+      //     return null
+      // }
+    return (
+      <div className="ViewLogistics-scroll">
+
+          <List>
+              <div className="viewLogistice_list">
+                  <Item
+                      multipleLine
+                      onClick={() => {}}
+                      platform="android"
+                      extra={'在线支付'}>支付方式</Item>
+                  <Item
+                      multipleLine
+                      onClick={() => {}}
+                      platform="android"
+                      extra={'申通'}>承运人</Item>
+                  <Item
+                      multipleLine
+                      onClick={() => {}}
+                      platform="android"
+                      extra={'968852'}>承运人电话</Item>
+                  <Item
+                      multipleLine
+                      onClick={() => {}}
+                      platform="android"
+                      extra={'17656585958'}>订单编号</Item>
+              </div>
+          </List>
+          <div className="viewLogistice_process">
+              <ul className="list-progress">
+                  {/*{*/}
+                      {/*this.state.developList.length > 0 && this.state.developList.map((item, index)=>{*/}
+                          {/*console.log(item.createTime)*/}
+                          {/*return <li key={index}>*/}
+                              {/*<h4 className="time">*/}
+                                  {/*/!*{Math.floor((item.createTime - this.state.now) / (24 * 3600 * 1000))}*!/10天前*/}
+                              {/*</h4>*/}
+                              {/*<p>{item.description}</p>*/}
+                              {/*<div className="single-thumbs clearfix">*/}
+                                  {/*{*/}
+                                      {/*item.images.split(',').map((imgItem, imgIndex) => {*/}
+                                          {/*return <Img key={index} src={imgItem}*/}
+                                                      {/*style={{width: '2rem', height: '2rem'}}/>*/}
+                                      {/*})*/}
+                                  {/*}*/}
+                              {/*</div>*/}
+                          {/*</li>*/}
+                      {/*})*/}
+                  {/*}*/}
+              </ul>
+
+          </div>
+
+         <div style={{position:'fixed',bottom:'0.1rem',width:'100%',textAlign:'center'}}><a href="https://m.kuaidi100.com/" target="_blank">快递查询</a></div>
+      </div>
+    )
+  }
+}
+
+export default withRouter(ViewLogistics);

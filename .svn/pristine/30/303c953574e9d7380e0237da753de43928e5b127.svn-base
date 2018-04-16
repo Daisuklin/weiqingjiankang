@@ -1,0 +1,45 @@
+.wx-CouponList {
+/*  .am-list-item .am-list-line .am-list-content {
+    font-size: .24rem;
+    padding: 0;
+    .am-list-item .am-list-line{
+        padding: 0;
+    }
+  }
+  height: 6rem;
+  overflow: auto;*/
+.am-list-header{text-align: center;}
+  .am-list-body{max-height: 665px;overflow-y: auto;}
+  .coupon_listItem1{
+    margin-top: 0.2rem;
+    margin-bottom: 0.2rem;
+    .am-list-line:after{border-bottom: none !important;}
+    .am-list-line{padding-right: 0px !important;
+    .am-list-content{padding: 0px}}
+    .coupon_list_box1{
+      border-bottom: 1px solid #e5e5e5;
+      border-top:1px solid #e5e5e5;
+      .coupon_list_img{width: 210px;height: 150px;}
+      .coupon_list_value{color:#fff;font-size: 0.55rem;padding-top: 0.1rem}
+      .coupon_list_txt{color:#fff;font-size: 0.24rem;}
+      .coupon_list_title{font-size: 0.28rem;color:#666666;padding-top: 0.1rem;}
+
+      .am-accordion{border-top: none;width: 100%;}
+      .am-accordion-header{height: 0.4rem;line-height: 0.4rem}
+      .am-accordion .am-accordion-item .am-accordion-header:after{border-bottom: none;}
+      .coupon_list_condition{
+        padding-top: 0.05rem;
+        div{font-size: 0.2rem;color:#999;line-height: 0.28rem}
+      }
+    }
+    .am-button{
+      padding: 0 0.3rem;
+    }
+    @media screen and (device-aspect-ratio: 40/71) {
+      .am-button{
+        padding: 0 0.2rem;
+        font-size: 0.2rem;
+      }
+    }
+  }
+}

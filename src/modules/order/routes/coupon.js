@@ -1,0 +1,252 @@
+import React, { Component } from 'react'
+import { withRouter } from 'react-router'
+import { connect } from 'react-redux'
+import {
+  Modal,
+  WhiteSpace,
+  WingBlank,
+  Toast,
+  Flex,
+  Button,
+  List,
+  Checkbox
+} from 'antd-mobile';
+import { Img } from 'commonComponent';
+import * as orderApi from '../api/order';
+import { common } from 'common';
+import Shop from '../components/Shop';
+import Fee from '../components/Fee';
+import OrderBar from '../components/OrderBar';
+import './coupon.less'
+
+const Item = List.Item;
+const Brief = Item.Brief;
+const AgreeItem = Checkbox.AgreeItem;
+
+class Coupon extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      couponInfo: {}
+    }
+
+  }
+
+  componentDidMount() {
+    orderApi.addCouponMember({
+      cartIds: this.props.params.cartIds
+    }).then(result => {
+      let data = result.data[0];
+
+      //如果已经选择了券，需要初始化      
+      if (this.props.order.couponId) {
+        // 遍历对象，修改选中的券 checked      
+        const storeIds = Object.keys(data);
+        // 遍历store
+        data = storeIds.map(item => {
+          // 遍历券
+          return data[item].map(coupon => {
+            coupon.checked = this.props.order.couponId == coupon.id;
+            return coupon;
+          })
+        })
+      }
+      this.setState({
+        couponInfo: data
+      });
+    });
+  }
+
+  onChange = (storeId, coupon, checked) => {
+    const { couponInfo } = this.state;
+    const storeCouponList = couponInfo[storeId].map(item => {
+      item.checked = item.id == coupon;
+      return item;
+    })
+    couponInfo[storeId] = storeCouponList;
+    this.setState({
+      couponInfo
+    });
+  }
+
+  submit = () => {
+    // 先获取券信息
+    const { couponInfo } = this.state;
+    const storeIds = Object.keys(couponInfo);
+    let couponIds = []
+    storeIds.forEach(storeId => {
+      couponInfo[storeId].forEach(coupon => {
+        if (coupon.checked) {
+          couponIds.push(coupon.id)
+        }
+      })
+    })
+    if (couponIds.length == 0) {
+      Toast.info('请先选择券');
+      return;
+    }
+
+    const couponId = couponIds.join(',');
+    const { isPd, freight, paytype, selectedAddress } = this.props.order;
+    orderApi.getPrice({
+      cartIds: this.props.params.cartIds,
+      cityId: selectedAddress.cityId,
+      isPd,
+      freight,
+      couponId
+    }).then(r => {
+      const priceData = r.data[0];
+      this.props.dispatch({
+        type: 'selectCoupon',
+        payload: {
+          priceData,
+          couponId
+        }
+      })
+      this.props.router.go('-1');
+    })
+  }
+
+  render() {
+    const { couponInfo } = this.state;
+    const storeIds = Object.keys(couponInfo);
+    console.log(couponInfo)
+    return <div>
+      {
+        storeIds && storeIds.length > 0 &&        
+          storeIds.map(id => {
+            const couponList = couponInfo[id]
+            return <List key={id} className="wx-gotocoupon">{/*renderHeader={couponList[0].shopActivityPromotionRule.shopActivity.storeName}*/}
+              {
+                couponList.map(coupon => {
+                  const {shopActivityPromotionRule} = coupon;
+                    const {shopActivity} = shopActivityPromotionRule;
+                    const {shopActivityMembership} = shopActivity;
+                    console.log(coupon)
+                  console.log(shopActivity)
+                  return <List.Item style={{padding:'0rem 0.26rem',margin:'0px 0px 0.2rem'}} className="gotoCoupons" key={coupon.id}>
+                    <Flex justify="between" align="center" style={{borderBottom:'1px solid #e5e5e5',borderTop:'1px solid #e5e5e5',minHeight:'152px'}}>
+                      <Flex className="coupon_list_box1" style={{flex:4}}>
+                        <Flex.Item style={{flex:1.5,maxWidth:'2.1rem',marginRight:'0.2rem'}}>
+                            {/*其他情况*/}
+                            {
+                                (shopActivity.storeId == 0 && shopActivity.allStoreUse == 1 ) &&<Flex
+                                    style={{background: 'url(./assets/img/weiqing/youhuiquan-03@2x.png) center center / 100% 100% no-repeat'}}
+                                    className="coupon_list_img" direction="column">
+                                  <div className="coupon_list_value"><span
+                                      style={{fontSize: '0.22rem'}}>￥</span>{shopActivityPromotionRule.couponSource}</div>
+                                  <div className="coupon_list_txt">满{shopActivityPromotionRule.limitWhere}元可用</div>
+                                </Flex>
+                            }
+                            {/*自营*/}
+                            {
+                                (shopActivity.storeId == 0 && shopActivity.allStoreUse != 1)&& <Flex style={{background:'url(./assets/img/weiqing/youhuiquan-02@2x.png) center center / 100% 100% no-repeat'}} className="coupon_list_img" direction="column">
+                                  <div className="coupon_list_value"><span style={{fontSize:'0.22rem'}}>￥</span>{shopActivityPromotionRule.couponSource}</div>
+                                  <div className="coupon_list_txt">满{shopActivityPromotionRule.limitWhere}元可用</div>
+                                </Flex>
+                            }
+                            {/*商家*/}
+                            {
+                                (shopActivity.storeId != 0 && shopActivity.allStoreUse == 0) && <Flex style={{background:'url(./assets/img/weiqing/youhuiquan-01@2x.png) center center / 100% 100% no-repeat'}} className="coupon_list_img" direction="column">
+                                  <div className="coupon_list_value"><span style={{fontSize:'0.22rem'}}>￥</span>{shopActivityPromotionRule.couponSource}</div>
+                                  <div className="coupon_list_txt">满{shopActivityPromotionRule.limitWhere}元可用</div>
+                                </Flex>
+                            }
+                          {/*<Flex style={{background:'url(./assets/img/weiqing/youhuiquan-03@2x.png) center center / 100% 100% no-repeat'}} className="coupon_list_img" direction="column">
+                            <div className="coupon_list_value"><span style={{fontSize:'0.22rem'}}>￥</span>{coupon.shopActivityPromotionRule.couponSource}</div>
+                            <div className="coupon_list_txt">满 {coupon.shopActivityPromotionRule.limitWhere} 元可用</div>
+                          </Flex>*/}
+                        </Flex.Item>
+                        <Flex.Item  style={{flex:2,marginLeft:'0rem',height:'1.5rem'}}>
+                          <div style={{paddingLeft:'0rem'}}>
+                            <div className="coupon_list_title">
+                                {/*商家*/}
+                                {
+                                    (shopActivity.storeId != 0 && shopActivity.allStoreUse == 0) && <span style={{padding: '6px 16px',
+                                        fontSize: '0.2rem',color: '#fff',background: '#e3536c',borderRadius: '0.3rem',marginRight: '0.15rem',display:'inline-block',width:'0.8rem',textAlign:'center'}}>{(shopActivity.storeName).substring(0,4)}</span>
+                                }
+                                {/*自营*/}
+                                {
+                                    (shopActivity.storeId == 0 && shopActivity.allStoreUse != 1) && <span style={{padding: '6px 16px',
+                                        fontSize: '0.2rem',color: '#fff',background: '#ffa920',borderRadius: '0.3rem',marginRight: '0.15rem',display:'inline-block',width:'0.8rem',textAlign:'center'}}>卫青自营</span>
+                                }
+                                {/*其他情况*/}
+                                {
+                                    (shopActivity.storeId == 0 && shopActivity.allStoreUse == 1 ) && <span style={{padding: '6px 16px',
+                                        fontSize: '0.2rem',color: '#fff',background: '#77b4f5',borderRadius: '0.3rem',marginRight: '0.15rem',display:'inline-block',width:'0.8rem',textAlign:'center'}}>全平台</span>
+                                }
+                              {/*<span style={{padding:'6px 16px',fontSize:'0.2rem',color:'#fff',background:'#00a9e0',borderRadius:'0.3rem',marginRight:'0.15rem'}}>
+                                  {coupon.shopActivityPromotionRule.shopActivity.storeId==0? '卫青自营' : '商家店铺'}
+                              </span>*/}
+                                {
+                                    coupon.shopActivityPromotionRule.shopActivity.goodsType == 0 && coupon.shopActivityPromotionRule.shopActivity.allStoreUse == 1 ? '部分商家' : null
+                                }
+                                {
+                                    coupon.shopActivityPromotionRule.shopActivity.goodsType == 0 && coupon.shopActivityPromotionRule.shopActivity.allStoreUse == 0 ? '全部商品' : null
+                                }
+                                {
+                                    coupon.shopActivityPromotionRule.shopActivity.goodsType== 1? '指定商品分类' : null
+                                }
+                                {
+                                    coupon.shopActivityPromotionRule.shopActivity.goodsType== 2 ? '指定商品类型' : null
+                                }
+                                {
+                                    coupon.shopActivityPromotionRule.shopActivity.goodsType== 3 ? '指定品牌' : null
+                                }
+                                {
+                                    coupon.shopActivityPromotionRule.shopActivity.goodsType== 4 ? '指定商品' : null
+                                }
+                              可用
+                            </div>
+                            <Flex justify="between" style={{padding:'0rem 0px 0px'}}>
+                              <div>
+
+                                <div style={{
+                                    color: '#999',
+                                    fontSize: '0.22rem',
+                                    paddingTop:'0.5rem'
+                                }}>{(coupon.shopActivityPromotionRule.shopActivity.startTimeStr).split(" ")[0].replace("-", ".")}
+                                  -{(coupon.shopActivityPromotionRule.shopActivity.endTimeStr).split(" ")[0].replace("-", ".")}</div>
+                              </div>
+
+                              {/*<span style={{color:'#999',fontSize:'0.22rem'}}>{coupon.shopActivityPromotionRule.shopActivity.startTimeStr.substr(0, 10)} - {coupon.shopActivityPromotionRule.shopActivity.endTimeStr.substr(0, 10)}</span>*/}
+                                {/*<Button inline size="sm" style={{width:'1.2rem',height:'0.5rem',lineHeight:'0.5rem',color:'#00a9e0',borderColor:'#00a9e0', fontSize:'0.24rem',padding:'0px 0.1rem'}}>立即领取</Button>*/}
+                            </Flex>
+                          </div>
+                        </Flex.Item>
+
+                      </Flex>
+                      <div style={{flex:0.5}}>
+                        <AgreeItem onChange={(e)=>this.onChange(id,coupon.id,e.target.checked)} checked={coupon.checked} className="agreeItem">
+                            {/*{coupon.shopActivityPromotionRule.description}*/}
+                        </AgreeItem>
+                      </div>
+
+                    </Flex>
+
+                  </List.Item>
+
+                  /*<Item key={coupon.id}>
+                    <AgreeItem onChange={(e)=>this.onChange(id,coupon.id,e.target.checked)} checked={coupon.checked}>
+                      {coupon.shopActivityPromotionRule.description}
+                    </AgreeItem>
+                    <Brief style={{ textAlign: 'right' }}>
+                      {coupon.shopActivityPromotionRule.shopActivity.startTimeStr.substr(0, 10)} 至 {coupon.shopActivityPromotionRule.shopActivity.endTimeStr.substr(0, 10)}
+                    </Brief>
+                  </Item>*/
+                })  
+              }
+            </List> 
+          })
+      }
+      <WhiteSpace></WhiteSpace>
+      <WingBlank>
+        <Button onClick={this.submit} type='primary' style={{background:'#00a9e0',borderColor:'#00a9e0'}}>确定</Button>
+      </WingBlank>
+    </div>
+  }
+}
+
+export default withRouter(connect(function({ order }) {
+  return { order }
+})(Coupon));

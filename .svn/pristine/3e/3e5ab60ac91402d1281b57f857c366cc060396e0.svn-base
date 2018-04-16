@@ -1,0 +1,76 @@
+.wx-goods-detail-spec-group {
+  .am-tag-active {
+    background-color: #fff;
+    color: #E43F47;
+    border: 1PX solid #E43F47;
+  }
+
+  .am-tag {
+    border-radius: .06rem;
+    display: inline-block;
+    position: relative;
+    font-size: .28rem;
+    padding: 0.1rem .4rem;
+    margin: 0.2rem;
+    text-align: center;
+    height: .48rem;
+    line-height: .48rem;
+  }
+
+  .am-tag-normal {
+    background-color: #fff;
+    color: #888;
+    border: 2PX solid #ddd;
+  }
+
+}
+//.am-list-body{border-top: 1px solid #e5e5e5;}
+.textIntroduce{
+  padding: 0.3rem 0.3rem 0.1rem;
+  border-bottom: 1px solid #ddd;
+  .textIntroduce_span{font-size: 0.26rem;color:#333333;padding-bottom: 0.2rem;}
+}
+.goodscontent{
+  .goodsname{font-size: 0.28rem;
+    color: #333;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;padding-bottom: 0.15rem;
+  }
+  .goodsproduct{font-size: 0.26rem;height: 0.6rem;overflow: hidden;
+    color: #666;margin-bottom: 0.2rem;}
+  .div_bottm{
+    .span_picese{
+      color: #e60012;font-size: 0.28rem;float: left;}
+    .span_kunum{font-size: 0.24rem;color:#9d9c9c;
+      float: right;}
+  }
+}
+.redeeNow_stepper{min-width: 0.8rem;}
+.am-list-line .am-list-content{font-size: 0.28rem;
+  color: #333 !important;}
+.am-stepper{height: 0.4rem;line-height: 0.4rem;border: 1px solid #ddd;padding: 0px;}
+.am-stepper .am-stepper-handler{width: 0.4rem;
+  height:0.4rem;line-height: 0.25rem;border:none;border-radius: 0px;}
+.am-stepper.showNumber .am-stepper-handler-up{border-left: 1px solid #ddd;}
+.am-stepper.showNumber .am-stepper-handler-down{border-right: 1px solid #ddd;}
+.am-stepper .am-stepper-handler .am-icon-xxs{width: 0.2rem;height: 0.2rem;}
+.am-stepper .am-stepper-input-wrap{height: 0.4rem;line-height: 0.4rem;}
+.am-stepper .am-stepper-input-wrap .am-stepper-input{font-size: .3rem;padding-bottom: 10px;}
+.wx-goodspece-detail-info{
+  background: #f3f3f3;
+
+.surplus_span{display: block;width: 110px;text-align: center;float: right;padding-top: 0.15rem;
+  font-size: 0.24rem;
+  color: #999;}
+  .am-flexbox-item:not(:first-child) {
+    font-size: .24rem;
+    color: red;
+  }
+}
+.wx-goodspece-detail-info:not(:first-child){ border-bottom: 1px solid #ddd;}
+.bargainBtn{position: fixed;background: #ffffff;height: 1rem;bottom: 0px;width: 100%;
+ /* box-shadow: 0 0 0 #fff, 0px -3px 16px #dbdbdb, 0 0 0 #fff,0 0 0 #fff;
+  -webkit-box-shadow: 0 0 0 #fff, 0px -3px 16px #dbdbdb, 0 0 0 #fff,0 0 0 #fff;
+  -moz-box-shadow: 0 0 0 #fff, 0px -3px 16px #dbdbdb, 0 0 0 #fff,0 0 0 #fff;
+  -ms-box-shadow: 0 0 0 #fff, 0px -3px 16px #dbdbdb, 0 0 0 #fff,0 0 0 #fff;
+  -o-box-shadow: 0 0 0 #fff, 0px -3px 16px #dbdbdb, 0 0 0 #fff,0 0 0 #fff;*/
+}
+

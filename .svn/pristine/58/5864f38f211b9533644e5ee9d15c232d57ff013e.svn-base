@@ -1,0 +1,44 @@
+.wx-my {
+  font-size: .28rem;
+  padding-bottom: 0.9rem;
+  .wx-my-menu1 {
+    height: 1rem;
+    background-color: #C03B41;
+    color:#fff;
+    text-align: center;
+  }
+
+  .wx-my-moneybag {
+    background: #ffffff;
+    padding: 0 0.26rem;
+    .am-list-header{padding: 0.3rem 0rem;}
+    .am-flexbox-item {
+      text-align: center;
+      color:#666;
+      font-size: 0.24rem;padding: 0.1rem 0rem;
+    }
+  }
+  .user_account{
+    .memberName{font-size: 0.3rem;color:#ffffff;}
+    .membership{font-size: 0.26rem;color:#ffffff;padding-top: 0.25rem}
+  }
+.my_order{
+  background: #ffffff;padding: 0px 0.26rem;
+  .am-list-header{padding: 0.3rem 0rem;}
+.my_order_grid{
+  .am-grid-item-content{color:#666;font-size: 0.24rem}
+  .am-grid-item-content div div{padding-top: 0.14rem;}
+}
+}
+  .am-grid .am-flexbox .am-flexbox-item .am-grid-item-contain .am-grid-text {
+    font-size: .28rem;
+  }
+  .my_navigation{
+    background: #ffffff;
+    .am-flexbox-item {
+      text-align: center;
+      color:#666;
+      font-size: 0.20rem;padding: 0.3rem 0rem;
+    }
+  }
+}

@@ -1,0 +1,46 @@
+import React, {Component} from 'react'
+import { withRouter } from 'react-router'
+import {Toast} from 'antd-mobile';
+import {common} from 'common';
+import {Img} from 'commonComponent';
+import  './css/pointGoods.less';
+import {addCart} from '../api/pointsGoods';
+/**
+ * 商品更多信息
+ * @param {*} param0
+ */
+class PointsBuy extends React.PureComponent {
+
+    constructor(props) {
+        super(props);
+    }
+    buyPointsGoods = (pointsGoodsNum) => {
+
+        // common.checkLogin();/*登录拦截*/
+        if(common.checkLogin()){
+            addCart({
+                shopPointsGoodsId: this.props.pointsGoodsId,
+                pointsGoodsNum:1
+            }).then(result => {
+                if(result.result==1){
+                    this.props.router.push(`/redeemNow`);//兑换积分商品
+                }else {
+                    Toast.fail(result.msg);
+                }
+            })
+        }
+
+    }
+
+
+    render() {
+        const goodsPoints=this.props.goodsPoints;
+        return <div className="buyGoods">
+            <a className="directorder" onClick={()=>this.buyPointsGoods(this.props.pointsGoodsId)}>
+                立即兑换
+            </a>
+        </div>
+    }
+}
+
+export default withRouter(PointsBuy)

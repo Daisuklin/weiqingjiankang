@@ -1,0 +1,18 @@
+.wx-recharge {
+  font-size: .28rem;
+  .am-list-item{padding: 0px 0.26rem;}
+  .am-list-item:after{border-bottom: none;}
+  .am-list-item .am-list-line .am-list-content {
+    font-size: .28rem;
+  }
+  .am-list-item .am-input-label {
+    font-size: .28rem;
+  }
+
+  .am-list-item .am-input-control input {
+    font-size: .28rem;
+  }
+  .am-button {
+    font-size: .28rem;
+  }
+}

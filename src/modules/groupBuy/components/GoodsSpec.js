@@ -1,0 +1,268 @@
+import React, {Component} from 'react';
+import { withRouter, Link,Popup } from 'react-router'
+import {Img, CartBar} from 'commonComponent';
+import {common} from 'common';
+import {List, Flex, Tag, Stepper, Icon, Button, Toast} from 'antd-mobile';
+import {Map} from 'immutable'
+import * as groupApi from '../api/groupBuy';
+import classnames from 'classnames';
+
+// import './goodsStorage.less'
+
+class SpecGroup extends React.PureComponent {
+    constructor(props) {
+        super(props);
+        this.state = {
+            sel: ''
+        }
+    }
+    render() {
+        // const { values, selectedValue, onChangeSpec } = this.props;
+        const groupItemIdInfo = this.state.groupItemIdInfo;
+        return <div className='wx-goods-detail-spec-group'>
+            {
+                values.map((value, index) => {
+                    const tagClass = classnames('am-tag', {
+                        'am-tag-active': selectedValue.includes(value.spValueId),
+                        'am-tag-normal': !selectedValue.includes(value.spValueId)
+                    })
+                    return
+                    <div key={index} onClick={() => onChangeSpec(value)} className={tagClass}
+                         style={{marginLeft: '0.18rem'}}>
+                        <div className="am-tag-text">{value.spValueName}</div>
+                    </div>
+                })
+            }
+        </div>
+    }
+}
+
+class goodsStorage extends React.PureComponent {
+
+    constructor(props) {
+        super();
+        // console.log('props', props);
+        this.state = {
+            groupItemIdInfo: Map(),
+            init: false,
+             buyCount: '1'
+        }
+
+    }
+
+    refresh = () => {
+        // Toast.loading();
+        // 获取拼团详情
+        groupApi.ginsengGroup({
+            groupItemId: this.props.groupItemId
+        }).then(result => {
+            //console.log(groupItemId);
+            //
+            //Toast.hide();
+            if (result.result != 0) {
+                //提示弹框
+                //Toast.info(result.msg);
+                // return;
+            }
+            const groupItemIdInfo = result.data;
+            // console.log(groupItemIdInfo);
+            this.setState({
+                groupItemIdInfo: groupItemIdInfo,
+                init: true
+            });
+        });
+    }
+
+    componentDidMount() {
+        this.refresh();
+    }
+    renderHeader = () => {
+        const {goodsDetailInfo} = this.props;
+      return <div>
+        <div style={{ position: 'relative' }}>
+          <div style={{float:'left',color:'#333',fontSize:'0.28rem',maxWidth:'80%',overflow:'hidden',whiteSpace:'nowrap',textOverflow:'ellipsis'}}>{goodsDetailInfo.groupName}</div>
+          <span
+            style={{
+              position: 'absolute', right: 3, top: -5,
+            }}
+            onClick={() => this.props.onClose('cancel')}>
+            <Icon type="cross" />
+          </span>
+        </div>
+
+      </div>
+    }
+
+    onChangeSpec = (spec) => {
+        const {goodsStorage, groupItemId} = this.state;
+        // 当前选择的所有规则
+        let currentSpecs = goodsStorage.specgoodsStorage;
+        // 删除当前规则组的所有子选项
+        const goodsStorageValueGroup = groupItemId[spec.spId];
+        // 只有1个规则项，不做处理
+        if (goodsStorageValueGroup.length == 1) {
+            // console.log(this.refs[`specGroup-${spec.spId}`]);
+            // const currentGroup = this.refs[`specGroup-${spec.spId}`];
+            return;
+        } else {
+            //  当前规则组 ，存在多个规则时 切换处理
+            groupItemId[spec.spId].forEach(item => {
+                delete currentSpecs[item.spValueId]
+            })
+            this.onChangeNum(1);
+            // 添加当前规则到 已选择的规则
+            currentSpecs[spec.spValueId] = spec.spValueName
+            const specIds = Object.keys(currentSpecs).join()
+            goodsDetailApi.getSpecByGoodsIdAndSpecIds({
+                goodsId: goodsStorage.goodsId,
+                specIds
+            }).then(result => {
+                if (result.result == 1) {
+                    const data = result.data[0]
+                    // 更新组件相关数据
+                    this.setState({
+                        goodsStorage: {
+                            ...this.state.goodsStorage,
+                            specGoodsPrice: data.price,
+                            specGoodsStorage: data.num,
+                            goodsStorageId: data.specId
+                        }
+                    })
+                    // 同步状态到外部页面
+                    this.props.onChangeSpec(currentSpecs, data);
+                }
+            })
+        }
+    }
+
+    onChangeNum = (num) => {
+        this.setState({
+            buyCount: num
+        })
+        this.props.onChangeBuyNum(num);
+    }
+
+    addCart = () => {
+        this.props.addCart(this.state.buyCount)
+    }
+    gotoBuy = () => {
+        const {groupItemIdInfo} = this.state;
+        const groupVo = groupItemIdInfo.groupVo;
+        const goodsStorage = groupVo.goodsStorage;//库存
+        const specId = groupVo.specId;
+        const groupItemId = groupVo.groupItemId;
+        const  groupNumber = this.state.buyCount;
+        if(goodsStorage < groupNumber || goodsStorage == 0){
+            Toast.info('库存不足，请重新选择', 1);
+        }else{
+            this.props.gotoBuy(groupNumber,specId,groupItemId);
+            this.props.onClose();
+        }
+
+    }
+    gotoginsengGroup = (groupDetailId) => {
+        // console.log(groupDetailId)
+        common.gotoginsengGroup({
+            groupDetailId: groupDetailId
+        });
+         this.props.onClose();
+    }
+
+    render() {
+
+        const groupItemIdInfo = this.state.groupItemIdInfo;
+        const groupDetailList = groupItemIdInfo.groupDetailList;
+        if (!this.state.init) {
+            return null
+        }
+        const groupVo = groupItemIdInfo.groupVo;
+        const limitNumber = groupVo.limitNumber;
+console.log(this.state)
+        return <div style={{marginBottom: '1.1rem'}}>
+            <List renderHeader={() => (this.renderHeader())}>
+            {/*<List>*/}
+                <div className="textIntroduce">
+                    <div className="textIntroduce_span">1.本团尾限定人次拼团</div>
+                    <div className="textIntroduce_span">2.人次达标即可拼团</div>
+                    <div className="textIntroduce_span">3.拼团结束后，退还起步价和团加差价</div>
+                </div>
+                {/*拼团后的商品展示*/}
+                <div>
+                    <Flex style={{height: '200px', padding: '0.2rem 0.3rem', borderBottom: '1px solid #ddd'}}>
+                        <Flex.Item style={{flex:1,textAlign:'center'}}>
+                        <Img src={groupVo.groupImage} style={{height:'130px',width:'1.62rem'}}></Img>
+                        </Flex.Item>
+                        <Flex.Item style={{flex: 2}} className="goodscontent">
+                            <div className="groupName">{groupVo.groupName}</div>
+                            {/*<div className="goodsproduct">{groupVo.groupName}</div>*/}
+                            <div className="div_bottm">
+                            <div className="span_picese">{`¥${groupVo.groupPrice}`}</div>
+                            <span className="span_kunum">库存：{groupVo.goodsStorage}</span>
+                            </div>
+                        </Flex.Item>
+                    </Flex>
+                </div>
+                {/*<div style={{paddingLeft:'0.3rem'}}>拼团后的商品展示</div>*/}
+                <List.Item extra={
+                <Stepper ref='stepper'
+                className="redeeNow_stepper"
+                style={{ width: '50%', minWidth: '1.5rem' }}
+                showNumber min={1}
+                 max={parseInt(limitNumber)}
+                size="small"
+                 onChange={this.onChangeNum}
+                value={this.state.buyCount} />
+                }>购买数量（限购<span style={{color:'#e60012'}}> {groupVo.limitNumber} </span>件）</List.Item>
+
+                <div>
+                    {
+                        groupDetailList && groupDetailList.map((grouplList,index)=>{
+                            return <Flex className='wx-goodspece-detail-info'  style={{padding:'0.2rem'}} key={index}>
+                                <Flex.Item style={{flex:1,textAlign:'center'}} className="bargainImgl">
+                                    <Img src={grouplList.memberAvatar} style={{width:'0.9rem',height:'0.9rem',borderRadius:'50%'}} />
+                                </Flex.Item>
+                                <Flex.Item style={{flex:2}}  >
+                                    <p style={{overflow: 'hidden',whiteSpace: 'nowrap',textOverflow: 'ellipsis',color:'#333'}}>{grouplList.createMemberName}</p>
+                                    <p style={{color:'#666'}}><span>{grouplList.groupPerson}人团</span><span style={{paddingLeft:'0.2rem'}}>已参团{grouplList.currentPerson}人</span></p>
+                                </Flex.Item>
+                                <Flex.Item style={{flex:2,textAlign:'right'}} onClick={()=>{this.gotoginsengGroup(grouplList.groupDetailId)}} >
+                                    <Button type='primary' size='small' inline
+                                            onClick={this.ginsegOrderList}
+                                            style={{width:'1.1rem',
+                                                padding:'0rem 0.1rem',
+                                                height:'0.5rem',
+                                                lineHeight:'0.5rem',
+                                                backgroundColor:'#5491d2',
+                                                borderColor:'#5491d2'}}>去参团</Button><br />
+                                    <span className="surplus_span">剩余{grouplList.remainPerson}人</span>
+                                </Flex.Item>
+                            </Flex>
+                        })
+                    }
+
+                </div>
+
+
+                <Flex className="bargainBtn">
+                    <Flex.Item style={{flex: 1}}>
+                        <Button type='primary' onClick={this.gotoBuy} style={{
+                            height: '0.65rem',
+                            margin: '0rem 0.2rem',
+                            lineHeight: '0.65rem',
+                            backgroundColor: '#5491d2',
+                            borderColor: '#5491d2'
+                        }}>下一步</Button>
+                    </Flex.Item>
+                </Flex>
+                {/**/}
+
+            </List>
+            {/*{<CartBar*/}
+            {/*gotoBuy={this.gotoBuy}*/}
+            {/*addCart={this.addCart}*/}
+            {/*></CartBar>}*/}
+        </div>
+    }
+}
+
+export default withRouter(goodsStorage);

@@ -1,0 +1,359 @@
+import React, { Component } from 'react'
+import { withRouter } from 'react-router'
+import {
+  WhiteSpace,
+  WingBlank,
+  Toast,
+  Flex,
+  Button,
+  TextareaItem,
+  ImagePicker,
+  Stepper,
+    Checkbox,
+    Modal
+} from 'antd-mobile';
+import { Img } from 'commonComponent';
+import { common } from 'common';
+// import CommentImg from '../../components/CommentImg';
+import * as orderApi from '../../home/api/order';
+const CheckboxItem = Checkbox.CheckboxItem;
+import './applyAfterSale.less';
+
+// 商品显示模块
+const GoodsItem = ({ goods }) => {
+  return <Flex style={{ backgroundColor: 'white',padding:'0rem 0.26rem 0.2rem' }}>
+    <Img src={goods.goodsImage} style={{ width: '1.6rem', height: '1.6rem' }} />
+    <Flex.Item>
+      <div style={{fontSize:'0.28rem',color:'#333',marginBottom:'0.15rem',overflow:'hidden',whiteSpace:'ellipsis',textOverflow:'nowrap'}}>{goods.goodsName}</div>
+      <div style={{fontSize:'0.24rem',color:'#666',paddingBottom:'0.15rem'}}>规格：{goods.specInfo}</div>
+      <div style={{fontSize:'0.24rem',color:'#888',paddingBottom:'0.15rem'}}>数量: {goods.goodsNum}</div>
+      <div style={{fontSize:'0.26rem',color:'#e9321f'}}>{`￥${goods.goodsPrice}`}</div>
+      {/*<p style={{paddingRight:'20px'}}></p>
+      <p style={{ color: 'red' }}></p>*/}
+    </Flex.Item>
+  </Flex>
+}
+
+// 分割线
+const SeparationLine = () => {
+  return <WhiteSpace style={{
+    backgroundColor: '#f3f3f3',
+    height: '0.2rem'
+  }}></WhiteSpace>
+}
+
+// 申请售后
+class ApplyAfterSale extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      files: [],
+      selectedAction: 1,
+      goodsNum: this.props.location.state.crowdListOrder.orderGoodsList[0].goodsNum,
+      buyerMessage: '',
+      sty:false,
+      orderItem:[],
+        isInit:false
+    }
+  }
+
+    componentDidMount() {
+        const orderid = this.props.location.state.crowdListOrder.orderId;
+        orderApi.orderdetail({
+            orderid
+        }).then(result => {
+            if (result.result == 1) {
+                const data = result.data[0]
+                this.setState({
+                    orderItem: data,
+                    isInit:true
+                });
+            }
+        })
+    }
+
+
+    onChangeContent = (value) => {
+        this.setState({
+            invContent: value
+        })
+        // 同步到redux order页面
+       /* this.props.dispatch({
+            type: 'invoiceChange',
+            payload: {
+                ...this.props.order.invoice,
+                invContent: value
+            }
+        })*/
+    }
+  // 修改上传文件  
+  onChange = (files, type, index) => {
+    this.setState({
+      files,
+    });
+  }
+
+  // 修改售后类型  
+  onChangeAction = (action) => {
+    this.setState({
+      selectedAction: action
+    })
+  }
+
+  // 修改数量
+  onChangeNum = (val) => {
+    this.setState({
+      goodsNum: val
+    })
+  }
+
+  onChangeBuyMessage = (buyerMessage) => {
+    this.setState({
+      buyerMessage
+    })
+  }
+	onBlur=()=>{
+		this.setState({
+      sty:false
+    })
+	}
+	onFocus=()=>{
+		this.setState({
+      sty:true
+    })
+	}
+  submitHandle = (imgUrl) => {
+    const { goodsItem, type } = this.props.location.state;
+    const { files, selectedAction, buyerMessage, goodsNum,orderItem } = this.state;
+    if (selectedAction == 1) {
+      const returnMoney = type == 1 ?
+        orderItem.returnMoney :
+        parseFloat(goodsItem.goodsPayPrice * goodsItem.goodsNum).toFixed(2)
+      orderApi.refundOrder({
+        imgUrl,
+        refundAmount: returnMoney,
+        buyerMessage,
+        orderGoodsId: goodsItem && goodsItem.recId,
+        orderId: orderItem && orderItem.orderId
+      }).then(r => {
+        if (r.result == 1) {
+          Toast.info(r.msg);
+          //Toast.hide();
+          this.props.router.replace('/barGainOrderList/0')
+        } else {
+          Toast.info(r.msg);
+        }
+      })
+    } else if (selectedAction == 2) { // 选择退货
+      orderApi.returnOrder({
+        imgUrl,
+        buyerMessage,
+        goodsNum,
+        orderGoodsId: goodsItem && goodsItem.recId,
+        orderId: orderItem && orderItem.orderId
+      }).then(r => {
+        if (r.result == 1) {
+          Toast.info(r.msg);
+           // Toast.hide();
+          this.props.router.replace('/barGainOrderList/0')
+        } else {
+          Toast.info(r.msg);
+        }
+      })
+    } else {
+      // 换货
+      orderApi.barterOrder({
+        imgUrl,
+        buyerMessage,
+        goodsNum,
+        orderGoodsId: goodsItem && goodsItem.recId,
+        orderId: orderItem && orderItem.orderId
+      }).then(r => {
+        if (r.result == 1) {
+          Toast.info(r.msg);
+            //Toast.hide();
+          this.props.router.push('/barGainOrderList/0')
+        } else {
+          Toast.info(r.msg);
+        }
+      })
+    }
+  }
+
+  // 提交申请
+  submit = () => {
+
+    const {goodsItem, type } = this.props.location.state;
+    const { files, selectedAction, buyerMessage, goodsNum,orderItem } = this.state;
+    if (buyerMessage == '') {
+      Toast.info('请填写问题描述', 1);
+      return;
+    }
+    Toast.loading('提交中..');
+    if (files.length > 0) {
+      orderApi.filesUpload({
+          images: files.map(item => item.file)
+      }).then(result => {
+        // 上传图片成功
+        if (result.result == 1) {
+          const imgUrl = result.data;
+          this.submitHandle(imgUrl);
+        }
+      });
+    } else {
+      this.submitHandle();
+    }
+
+  }
+
+
+  render() {
+    const { goodsItem, type } = this.props.location.state;
+
+    const {
+      files,
+      selectedAction,
+      goodsNum,
+        orderItem
+    } = this.state;
+    if(!this.state.isInit){
+      return null;
+    }
+    console.log(orderItem)
+    const showActions = [<Button
+        key={1}
+        {...(selectedAction == 1 ? { type: 'ghost' } : {})}
+        onClick={()=>this.onChangeAction(1)}
+        style={{marginRight:'.2rem',width:'2rem',height:'0.5rem',lineHeight:'0.5rem',color:'#666',fontSize:'0.24rem',borderRadius:'3px'}}
+        size='small' inline>退款</Button>]
+    if (type == 2 && orderItem.orderState == 40) {
+      showActions.push(<Button
+        key={2}
+        {...(selectedAction == 2 ? { type: 'ghost' } : {}) }
+        onClick={()=>this.onChangeAction(2)}  
+        style={{marginRight:'.2rem',width:'2rem',height:'0.5rem',lineHeight:'0.5rem',color:'#666',fontSize:'0.24rem',borderRadius:'3px'}}
+        size='small' inline>退货</Button>)
+      showActions.push(<Button
+        key={3}
+        {...(selectedAction == 3 ? { type: 'ghost' } : {}) }
+        onClick={() => this.onChangeAction(3)}
+        style={{ marginRight: '.2rem',width:'2rem',height:'0.5rem',lineHeight:'0.5rem',color:'#666',fontSize:'0.24rem',borderRadius:'3px' }}
+        size='small' inline>换货</Button>)
+    }
+    // 退款
+    const returnMoney = type == 1 ?
+      orderItem.returnMoney :
+      parseFloat(goodsItem.goodsPayPrice * goodsItem.goodsNum).toFixed(2)
+    return (
+      <div className="wx-applyafterSale fix-scroll">
+        <WhiteSpace style={{
+          height: '0.2rem',
+          backgroundColor:'white'
+        }}></WhiteSpace>
+        {
+          type == 1 && orderItem && orderItem.orderGoodsList.map((goods,index) => {
+            return <GoodsItem key={index} goods={goods}></GoodsItem>
+          })
+        }
+
+        {
+          type == 2 && <GoodsItem goods={goodsItem}></GoodsItem>
+        }
+        
+        <SeparationLine></SeparationLine>
+
+        <div style={{backgroundColor:'#fff'}} className="apple_type">
+          <div style={{padding:'0.3rem 0.26rem',borderBottom:'1px solid #e5e5e5',fontSize:'0.26rem',color:'#333'}}>
+            服务类型
+          </div>
+          <Flex style={{ padding:'0.3rem 0.26rem'}}>
+            {showActions}
+          </Flex>    
+        </div>
+        <SeparationLine></SeparationLine>
+        <Flex style={{padding:'0.3rem 0.26rem',backgroundColor:'#fff'}}>
+          <div style={{color:'#333',fontSize:'0.26rem'}}>退款方式：原路返回</div>
+        </Flex>
+        <SeparationLine></SeparationLine>
+        {
+          selectedAction ==1 &&  <div className="apple_number">
+              <div>
+                <div className="apple_number_name">退货金额</div>
+                <div className="apple_number_price">{`￥${returnMoney}`}</div>
+              </div>
+            </div>
+        }
+        {
+          type==2 && selectedAction !=1 && <div className="apple_number">
+            <div>
+              <div className="apple_number_name">申请数量</div>
+              <div style={{padding:'0.2rem 0.26rem'}}>
+                <Stepper
+                    showNumber
+                    defaultValue={goodsItem.goodsNum}
+                    onChange={this.onChangeNum}
+                    value={this.state.goodsNum}
+                    max={goodsItem.goodsNum} min={1}
+                    useTouch={false}
+                    className="apple_number_stepper"
+                />
+              </div>
+
+            </div>
+          </div>
+        }
+        <SeparationLine></SeparationLine>
+        <div className="apple_number">
+          <div>
+            <div className="apple_number_name">申请凭证</div>
+            <div className="apple_number_checkbox">
+              <Flex>
+                <CheckboxItem checked={this.state.invContent==1} onChange={() => this.onChangeContent(1)}>有发票</CheckboxItem>
+                <CheckboxItem checked={this.state.invContent==2} onChange={() => this.onChangeContent(2)}>无发票</CheckboxItem>
+              </Flex>
+
+            </div>
+          </div>
+        </div>
+        <SeparationLine></SeparationLine>
+				
+        {/*<WingBlank style={this.state.sty==true?{position:'absolute',top:'10%',borderRadius:'30px',zIndex:'99999',width:'87%',padding:'0.3rem',border:'1px solid #000',borderBottom:'2px solid #000',background:'rgb(235, 235, 239)'}:{}} >*/}
+        <div style={{backgroundColor:'#fff'}}>
+          <div style={{color:'#333',fontSize:'0.26rem',padding:'0.3rem 0.26rem',borderBottom:'1px solid #e5e5e5'}}>问题描述</div>
+           <TextareaItem
+            className='issue-desc' 
+            onChange={this.onChangeBuyMessage}
+						onFocus={this.onFocus}
+						onBlur={this.onBlur}
+            ref="issue"
+            rows={3}
+            placeholder="请详细说明情况"
+            style={{}}
+          />
+        </div>
+      {/*</WingBlank>*/}
+
+        <SeparationLine></SeparationLine>
+        <div className="apple_number">
+          <div>
+            <div className="apple_number_name">上传照片</div>
+            <ImagePicker
+              files={files}
+              onChange={this.onChange}
+              selectable={files.length < 3}
+              className="apple_number_imgpicker"
+              />
+          </div>  
+        </div>
+        <div style={{fontSize:'0.22rem',color:'#999',padding:'0.2rem 0.26rem'}}>最多上传3张，每张不超过3M，支持JPG、BMP、PNG</div>
+        {/*<div style={{paddingBottom:'1rem'}}></div>*/}
+        <WingBlank style={{width:'100%',background:'none',padding:'0.5rem 0px',margin:'0px'}}>
+          <Button type='primary' onClick={this.submit} style={{height:'0.7rem',borderRadius:'3px',margin:'0px 0.0rem',margin:'0px 0.26rem', lineHeight:'0.65rem',backgroundColor:'#00a9e0',borderColor:'#00a9e0'}}>下一步</Button>
+          {/*<Button type='primary' onClick={(e) => this.cancelOrder(orderItem)} style={{height:'0.7rem',borderRadius:'3px',margin:'0px 0.0rem',margin:'0px 0.26rem', lineHeight:'0.65rem',backgroundColor:'#00a9e0',borderColor:'#00a9e0'}}>取消订单</Button>*/}
+        </WingBlank> 
+      </div>
+    )
+  }
+}
+
+export default withRouter(ApplyAfterSale);

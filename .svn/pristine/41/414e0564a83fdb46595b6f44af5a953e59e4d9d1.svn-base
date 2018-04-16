@@ -1,0 +1,186 @@
+import React, { Component } from 'react'
+import { withRouter } from 'react-router'
+import {
+  WhiteSpace,
+  WingBlank,
+  Toast,
+  Tabs,
+  Flex,
+  ListView,
+  SegmentedControl,
+  Button
+} from 'antd-mobile';
+import { Img } from 'commonComponent';
+import CrowdFundingOrderItem from '../components/CrowdFundingOrderItem';
+import * as crowdFundingApi from '../api/crowdFundingApi';
+import './crowdFundingOrderList.less';
+
+const TabPane = Tabs.TabPane;
+class CrowdFundingOrderList extends Component {
+
+  constructor(props) {
+    super(props);
+    this.ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
+    this.crowdListOrder = []
+    // let status = null;
+    // let orderType = 1;
+    this.state = {
+      selectedIndex: parseInt(props.params.type),
+      pageNo: 1,
+      dataSource: this.ds.cloneWithRows(this.crowdListOrder),
+      hasMore: false,
+      isLoading: false,
+      isInit: true
+    }
+  }
+
+  refreshList = ({ pageNo, selectedIndex }) => {
+    let status = null;
+    let orderType = 1;
+    switch (selectedIndex) {
+      case 0:
+        status = null;
+        break;
+      case 1:
+        status = 10;
+        break;
+      case 2:
+        status = 15;
+        break;
+      case 3:
+        status = 90;
+        break;
+    }
+
+    console.log('isInit', this.state.isInit);
+
+      crowdFundingApi.crowdListOrder({ pageNo, orderState:status,pageSize:10 }).then(result => {
+      this.setState({
+        isLoading: false
+      });
+      if (result.result == 1) {
+        const data = result.data || [];
+        const pageSize = 10;
+        const dataLength = data.length;
+        let hasMore = true;
+        if (dataLength < pageSize) {
+          hasMore = false;
+        }
+        if (this.state.isInit) {
+          this.crowdListOrder = data;
+        } else {
+          this.crowdListOrder = [...this.crowdListOrder, ...data];
+        }
+        this.setState({
+          hasMore,
+          pageNo,
+          dataSource: this.ds.cloneWithRows(this.crowdListOrder),
+        })
+      }
+    })
+  }
+
+  // 改变tab
+  onChange = (index) => {
+  	console.log(index)
+    this.props.router.replace('/crowdFundingOrderList/' + index);
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    // 当前url参数
+    const type = parseInt(this.props.params.type);
+    // 如果变化参数
+    if (type != this.state.selectedIndex) {
+      this.setState({
+        pageNo: 1,
+        selectedIndex: type,
+        isInit: true
+      })
+
+      this.refreshList({
+        pageNo: 1,
+        selectedIndex: type
+      });
+    }
+  }
+
+  componentDidMount() {
+    this.refreshList({
+      pageNo: 1,
+      selectedIndex: this.state.selectedIndex
+    });
+  }
+
+  refresh = () => {
+    this.refreshList({
+      pageNo: 1,
+      selectedIndex: this.state.selectedIndex
+    });
+  }
+
+  onEndReached = (event) => {
+  	console.log(1)
+    if (this.state.isLoading || !this.state.hasMore) {
+      return;
+    }
+    this.setState({
+      isLoading: true,
+      isInit: false
+    });
+    let pageNo = this.state.pageNo + 1;
+    this.refreshList({
+      pageNo,
+      selectedIndex: this.state.selectedIndex,
+    });
+  }
+
+  render() {
+    const { selectedIndex, dataSource } = this.state
+    const footer = <div style={{ padding: 30, textAlign: 'center',marginBottom:'7.4rem' }}>
+      {this.state.isLoading ? '加载中...' : '加载完毕'}
+    </div>;
+
+    return (
+      <div style={{
+        paddingTop:'2px'
+      }}>
+        <div style={{padding:'0px 0.26rem',background:'#fff'}}>
+          <SegmentedControl
+              className='crowdFunding-header'
+              // tintColor={'#00a9df'}
+              onChange={(e) => this.onChange(e.nativeEvent.selectedSegmentIndex)}
+              selectedIndex={selectedIndex}
+              values={['全部', '待付款', '已支付', '已退款']} style={{
+              height:'0.8rem'
+          }}/>
+        </div>
+        {/*<WhiteSpace style={{ backgroundColor: '#f3f3f3' }}></WhiteSpace>*/}
+
+
+      <div className="wx-crowdFundingorderlist">
+      
+        <div className='orderlist-body'>
+          <ListView
+            style={{
+              height: `${document.documentElement.clientHeight/100-1.6}rem`,
+              overflow: 'scroll',
+            }}
+            pageSize={10}
+            renderFooter={()=>footer}
+            onEndReached={this.onEndReached}
+            onEndReachedThreshold={50}
+            dataSource={this.state.dataSource}
+            renderRow={(crowdListOrder) => (
+              <CrowdFundingOrderItem
+                cancelOrder={this.refresh}
+                finishorder={this.refresh}
+                crowdListOrder={crowdListOrder}></CrowdFundingOrderItem>
+            )}> </ListView>
+        </div>
+      </div>
+      </div>
+    )
+  }
+}
+
+export default withRouter(CrowdFundingOrderList);

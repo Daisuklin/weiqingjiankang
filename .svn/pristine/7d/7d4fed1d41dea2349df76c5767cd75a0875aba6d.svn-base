@@ -1,0 +1,248 @@
+import React, {Component} from 'react'
+import {withRouter, Link} from 'react-router'
+import {
+    Toast,
+    Flex,
+    Button,
+    List,
+    WingBlank,
+    WhiteSpace,
+    Grid,
+    SearchBar,
+    Icon,
+    Carousel
+} from 'antd-mobile';
+import {Img} from 'commonComponent';
+import {common} from 'common';
+import HottesList from '../../components/HottesList';
+import * as storeApi from '../../api/store';
+
+import './store.less';
+
+const Item = List.Item;
+
+class Store extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            goodsList: [],
+            raiseList: [],
+            groupList: [],
+            bargainList: [],
+            specKillList: [],
+            store: null,
+        }
+    }
+
+    componentDidMount() {
+        storeApi.storedetail({
+            storeId: this.props.params.storeId
+        }).then(result => {
+            if (result.result == 1) {
+                const data = result.data;
+                this.setState({
+                    goodsList: data.goodsList,
+                    raiseList: data.raiseList,
+                    groupList: data.groupList,
+                    bargainList: data.bargainList,
+                    specKillList: data.specKillList,
+                    store: data.store[0]
+                })
+            }
+        });
+
+        if (common.isLogin()) {
+            storeApi.storeBrowseSaveOrUpdate({
+                storeId: this.props.params.storeId
+            });
+        }
+    }
+
+    onClick = (dataItem) => {
+        common.gotoGoodsDetail({specId: dataItem.specId})
+    }
+
+    renderItem = (dataItem) => {
+        return <Flex direction='column' style={{padding: '0.1rem'}}>
+            <div>
+                <Flex.Item style={{textAlign: 'center'}}>
+                    <Img src={dataItem.goodsImage}
+                         style={{width: '3.1rem', height: '3.1rem', border: '1px solid #e5e5e5'}}/>
+                </Flex.Item>
+            </div>
+            <Flex.Item style={{textAlign: 'center', width: '100%',padding:'0.2rem'}}>
+                <div style={{
+                    fontSize: '.28rem',
+                    overflow: 'hidden',
+                    color: '#333',
+                    textAlign: 'center',
+                    whiteSpace: 'nowrap',
+                    textOverflow: 'ellipsis'
+                }}>{dataItem.goodsName}</div>
+            </Flex.Item>
+            <Flex.Item style={{textAlign: 'center', width: '100%', padding: '0.1rem 0.25rem 0.1rem'}}>
+                <span style={{
+                    fontSize: '.3rem',
+                    color: '#e1536b',
+                    textAlign: 'center'
+                }}>{`¥${dataItem.goodsStorePrice}`}</span>
+            </Flex.Item>
+        </Flex>
+    }
+
+    storecollection = () => {
+        common.checkLogin();
+        storeApi.storecollection({
+            storeId: this.props.params.storeId,
+            favType: 2,
+            goodsId: null
+        }).then(result => {
+            if (result.result == 1) {
+                Toast.info(result.msg);
+                const store = {
+                    ...this.state.store,
+                    isFav: result.isfav
+                };
+                // console.log(store);
+                storeApi.storedetail({
+                    storeId: this.props.params.storeId
+                }).then(result => {
+                    if (result.result == 1) {
+                        const data = result.data;
+
+                        this.setState({
+                            goodsList: data.goodsList,
+                            store: data.store[0]
+                        })
+                    }
+                });
+            }
+
+        });
+    }
+
+    render() {
+        const {
+            store,
+            goodsList,
+            raiseList,
+            groupList,
+            bargainList,
+            specKillList
+        } = this.state;
+        if (!store) {
+            return null;
+        }
+
+        let arr=[];
+        if(store.storeSlide){
+            console.log(store.storeSlide);
+             arr = store.storeSlide.split(",").filter((i) => {
+                if (i != "") {
+                    return i
+                }
+            });
+        }
+        // console.log(store)
+        const {params, router} = this.props;
+        const storeBannerShow = `url(${common.IMAGE_DOMAIN}${store.storeBanner}) no-repeat center center`;
+        return <div className='wx-store'>
+            <Flex className='wx-store-search'>
+                {/*<Icon type='left' onClick={()=>this.props.router.goBack()}/>*/}
+                <Flex.Item>
+                    <SearchBar placeholder="输入你要搜索的内容" style={{}} onSubmit={value => {
+                        this.props.router.push(`/store/${this.props.params.storeId}/goods/${value}`)
+                    }}
+                    />{/*<button style={{float:'right'}}>搜索</button>*/}
+                </Flex.Item>
+            </Flex>
+            <div className='fix-scroll hastitle hasbottom' style={{overflowX: 'hidden'}}>
+                {
+                    store.storeId!=0?<div className='wx-store-header'>
+                        {
+                            store.storeSlide != null ?
+                                <Carousel autoplay={true} infinite={true} dots={true} selectedIndex={0}
+                                          style={{height: '3.8rem'}}>
+                                    {
+                                        arr.map((imgSrc, index) => {
+                                            if(imgSrc!=' '&&imgSrc!=null){
+                                                return <Img key={index} src={imgSrc} style={{height:'3.90rem'}}/>
+                                            }
+
+                                        })
+                                    }
+                                </Carousel> : <Img src={storeBannerShow} style={{height:'3.90rem'}}/>
+                        }
+                        {/* <WingBlank size='sm'>
+                         <Flex className='wx-store-header-body'>
+                         <Img src={store.storeLogo} style={{
+                         width: '2rem',
+                         height: '1rem'
+                         }} />
+
+                         <Flex.Item>
+                         <div>{store.storeName}</div>
+                         <div>{store.storeCollect}人关注</div>
+                         </Flex.Item>
+                         <Flex.Item>
+                         </Flex.Item>
+                         <Button className='rightBtn' type='primary' size='small' onClick={this.storecollection}>
+                         {
+                         store.isFav==1?'已关注':'关注'
+                         }
+                         </Button>
+                         </Flex>
+                         </WingBlank>*/}
+                    </div>:null
+                }
+
+                <WhiteSpace size="md" style={{background: '#f3f3f3'}}/>
+                <HottesList raiseList={raiseList} groupList={groupList} bargainList={bargainList}
+                            specKillList={specKillList} storeId={params.storeId}></HottesList>
+                {/*<WhiteSpace size="md" style={{background:'#f3f3f3'}}/>*/}
+                <WhiteSpace></WhiteSpace>
+                <Flex className="flex_tabs">
+                    <Flex.Item onClick={() =>
+                        router.push(`/store/${params.storeId}/goods`)
+                    }>
+                        <div>全部商品({store.storeGoodsCount})</div>
+                    </Flex.Item>
+                    <Flex.Item onClick={() =>
+                        router.push(`/store/${params.storeId}/newgoods`)
+                    }>
+                        <div>上新({store.newGoodsNum})</div>
+                    </Flex.Item>
+
+                    <Flex.Item onClick={() => {
+                        router.push(`/gotoCoupons/${params.storeId}`)
+                    }}>
+                        <div>优惠券({store.couponNum})</div>
+                    </Flex.Item>
+                </Flex>
+                {/*<WhiteSpace></WhiteSpace>*/}
+                <div style={{padding: '0.2rem 0rem', background: '#fff'}}>
+                    <Grid data={goodsList} columnNum={2}
+                          onClick={(el, index) => this.onClick(el)}
+                          renderItem={(dataItem, index) => (this.renderItem(dataItem))} className="grid_store">
+                    </Grid>
+                </div>
+            </div>
+            <div className='wx-store-bar'>
+                <Flex style={{width: '100%', textAlign: 'center'}}>
+                    <Flex.Item>
+                        <Link to={`/store/${this.props.params.storeId}/detail`}><span
+                            style={{color: '#000'}}>店铺详情</span></Link>
+                    </Flex.Item>
+                    <Flex.Item onClick={() => router.push(`/store/${params.storeId}/goods`)}>
+                        热门分类
+                    </Flex.Item>
+                    <Flex.Item onClick={() => router.push(`/contactSeller/${store.storeId}`)}>
+                        联系卖家
+                    </Flex.Item>
+                </Flex>
+            </div>
+        </div>
+    }
+}
+
+export default withRouter(Store);

@@ -1,0 +1,61 @@
+/*确认兑换*/
+.points_confirmechange{
+  background: #ffffff;
+  padding: 0.3rem 0.26rem 0.28rem;
+  .corowd_price{font-size: 0.28rem;color:#252525;}
+  .corowd_product{font-size: 0.24rem;color:#666666;padding-top: 0.1rem;line-height: 0.35rem;}
+}
+.points_confirmechange2{
+  background: #ffffff;
+  padding: 0.3rem 0.26rem 0.28rem;
+  .corowd_price2{font-size: 0.28rem;color:#252525;}
+  .corowd_product2{font-size: 0.24rem;color:#666666;padding-top: 0.2rem;line-height: 0.35rem;text-overflow: ellipsis;overflow: hidden;white-space: nowrap;}
+  .txt{font-size: 0.26rem;color:#999;line-height: 0.4rem;}
+}
+
+.extrared{
+  .am-list-line:after{border-bottom: none;}
+  .am-list-body div:not(:last-child) .am-list-line:after{border-bottom: none;}
+  //.span_integ .am-list-extra{color:#e60012;}
+  .am-list-item{padding: 0px 0.26rem;
+    .am-list-content{font-size: 0.28rem; color: #333;}
+    .am-list-extra{color: #999999;}
+  }
+  .inputItem{
+    .am-input-label{font-size: 0.28rem;color:#333333;}
+    input{font-size: 0.26rem;color:#999;}
+  }
+  .remarks .am-input-label{width: 1rem;}
+}
+.am-list-body:after{
+  border:none;}
+.wx-orderbar-exchange {
+  height: 1.1rem;
+  border-top: none;
+  position: fixed;
+  bottom: 0.3rem;
+  width: 100%;
+  display: flex;
+  transition: bottom 0.2s;
+  z-index: 100;
+  background: none;
+  .orderbar-exchange-btn {
+    height: 0.75rem !important;
+    line-height: 0.75rem !important;
+  }
+}
+.my-radio .am-checkbox {
+  //padding: 0.05rem;
+  //border: 1px solid #ccc;
+  //border-radius: 50%;
+  //margin-right: 0.2rem;
+  //width: 0.2rem;
+  //height: 0.2rem;
+  .am-checkbox-inner{top:30px ;}
+}
+.crowd_btn{
+.integral_total{height: 62px;line-height: 62px;font-size: 0.28rem;color:#333;}
+  .confirm_exchange_box{
+    .am-list-content{padding-top: 0px !important;padding-bottom: 0px !important;}
+  }
+}

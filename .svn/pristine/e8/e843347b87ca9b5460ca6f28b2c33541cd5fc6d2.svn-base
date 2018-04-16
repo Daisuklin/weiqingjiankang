@@ -1,0 +1,127 @@
+/**
+ * API请求
+ * Created by leimingtech-lhm on 2017/5/16.
+ */
+import {fetch, common} from 'common';
+
+/**
+ * 积分商城列表
+ * @param pageSize
+ * @param pageNo
+ * @param begin
+ * @param end
+ */
+export function pointsGoodsList({pageSize, pageNo, begin, end}) {
+    return fetch.get('/api/pointsgoods/list', {
+        pageSize,
+        pageNo,
+        begin,
+        end
+    })
+}
+
+
+/**
+ * 积分商品详情
+ * @param pointsGoodsId
+ */
+export function pointsGoodsdetail({id}) {
+    return fetch.get('api/pointsgoods/pointGoods', {id});
+}
+
+
+/**
+ * 加入购物车
+ * @param shopPointsGoodsId 商品id
+ * @param pointsGoodsNum 商品数量
+ */
+export function addCart({shopPointsGoodsId, pointsGoodsNum}) {
+    return fetch.get('api/pointsgoods/addCart', {shopPointsGoodsId, pointsGoodsNum});
+}
+/**
+ * 购物车列表
+ * @param shopPointsGoodsId 商品id
+ * @param pointsGoodsNum 商品数量
+ */
+export function shopCarlist({}) {
+    return fetch.get('api/pointsgoods/saveCart', {});
+}
+
+
+/**
+ * 修改购物车中商品数量
+ * @param shopPointsCartId
+ * @param pointsGoodsNum
+
+ */
+export function changeTheNumberOfShoppingCarts({shopPointsCartId, pointsGoodsNum}) {
+    return fetch.get('api/pointsgoods/updatePointsCart', {
+        shopPointsCartId,
+        pointsGoodsNum
+    })
+}
+
+
+export function delCartGoods({ids}) {
+    return fetch.get('api/pointsgoods/delete', {ids})
+}
+
+/**
+ * 确认积分订单
+ * @param cartIds
+ */
+export function confirmationOfIntegralOrder({cartIds}) {
+    return fetch.get('api/pointsgoods/pointCart', {
+        cartIds
+    })
+}
+
+
+/**
+ * 提交订单
+ * @param cartIds
+ * @param transportType
+ * @param addressId
+ *
+ */
+
+export function placeOrder({cartIds, transportType, addressId, passwd}) {
+    return fetch.get('api/pointsgoods/submitOrder', {
+        cartIds,
+        transportType,
+        addressId,
+        passwd
+    })
+}
+
+/**
+ * 积分兑换列表
+ * @param cartIds
+ * @param transportType
+ * @param addressId
+ *
+ */
+
+export function orderList({pageSize, orderState, pageNo}) {
+    return fetch.get('/api/pointsgoods/orderList', {
+        pageSize,
+        orderState,
+        pageNo
+    })
+}
+
+/**
+ * 积分商品详情
+ * @param orderId
+ */
+export function orderdetail({orderId}) {
+    return fetch.get('/api/pointsgoods/orderdetail', {orderId})
+}
+
+/**
+ * 积分列表确认收货
+ * @param orderId
+ */
+export function finishOrder({orderid}) {
+    return fetch.get('/api/pointsgoods/finishOrder', {orderid})
+}

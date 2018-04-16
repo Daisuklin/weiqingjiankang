@@ -1,0 +1,93 @@
+.coupon_tabs{
+  .am-tabs-tab{font-size: 0.28rem;color:#333;}
+  .am-tabs-tab-active{font-size: 0.28rem;color:#00a9e2 !important;}
+  .am-tabs-ink-bar{background: #00a9e2 !important;}
+}
+.wx-coupon {
+  font-size: .28rem;
+  .am-list-item .am-list-line .am-list-content {
+    font-size: .28rem;
+  }
+  /*未使用*/
+  .coupon_listItem1{
+    margin-top: 0.2rem;
+    margin-bottom: 0.2rem;
+    .am-list-line:after{border-bottom: none !important;}
+    .coupon_list_box1{
+      border-bottom: 1px solid #e5e5e5;
+      border-top:1px solid #e5e5e5;
+      .coupon_list_img{max-width: 2.1rem;height: 1.5rem;}
+      .coupon_list_value{color:#fff;font-size: 0.55rem;padding-top: 0.1rem}
+      .coupon_list_txt{color:#fff;font-size: 0.24rem;}
+      .coupon_list_title{font-size: 0.28rem;color:#666666;}
+
+      .am-accordion{border-top: none;width: 100%;}
+      .am-accordion-header{height: 0.4rem;line-height: 0.4rem}
+      .am-accordion .am-accordion-item .am-accordion-header:after{border-bottom: none;}
+
+    }
+  }
+
+  /*已使用*/
+  .coupon_listItem2{
+    margin-top: 0.2rem;
+    margin-bottom: 0.2rem;
+    .am-list-line:after{border-bottom: none !important;}
+    .coupon_list_box2{
+      border-bottom: 1px solid #e5e5e5;
+      border-top:1px solid #e5e5e5;
+      .coupon_list_img{max-width: 2.1rem;height: 1.5rem;}
+      .coupon_list_value{color:#fff;font-size: 0.55rem;padding-top: 0.1rem}
+      .coupon_list_txt{color:#fff;font-size: 0.24rem;}
+      .coupon_list_title{font-size: 0.28rem;color:#666666;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;}
+
+      .am-accordion{border-top: none;width: 100%;}
+      .am-accordion-header{height: 0.4rem;line-height: 0.4rem}
+      .am-accordion .am-accordion-item .am-accordion-header:after{border-bottom: none;}
+    }
+  }
+
+
+
+}
+.coupon-header {
+  top: 0;
+  width: 100%;padding: 0.1rem 0rem 0rem;
+  .am-segment-item{
+    color: #333;font-size: 0.3rem;background: #ffffff;border: none;border-bottom:2px solid #ffffff ;border-radius: 0px}
+  .am-segment-item-selected{background:#ffffff;color:#00a9df !important;border-bottom-color: #00a9df }
+}
+.give-coupon-box{
+  padding-top: 0.1rem;
+  border: 1px solid #e5e5e5;
+  border-top: none;
+  box-shadow: 0px 0px 0px #fff, 0px 0px 0px #fff, 0px 6px 10px rgb(251, 249, 249), 0px 0px 0px #fff;
+  -webkit-box-shadow: 0px 0px 0px #fff, 0px 0px 0px #fff, 0px 6px 10px rgb(251, 249, 249), 0px 0px 0px #fff;
+  -moz-box-shadow: 0px 0px 0px #fff, 0px 0px 0px #fff, 0px 6px 10px rgb(251, 249, 249), 0px 0px 0px #fff;
+  -ms-box-shadow: 0px 0px 0px #fff, 0px 0px 0px #fff, 0px 6px 10px rgb(251, 249, 249), 0px 0px 0px #fff;
+  -o-box-shadow: 0px 0px 0px #fff, 0px 0px 0px #fff, 0px 6px 10px rgb(251, 249, 249), 0px 0px 0px #fff;
+  .coupon_list_condition{
+    padding-top: 0.05rem;
+    div{font-size: 0.24rem;color:#999;padding: 0.05rem 0rem 0rem 0.2rem;}
+  }
+  .give-coupon-block{box-shadow: none;}
+}
+.give-coupon-block{
+  //display: none;
+  text-align: center;
+  font-size: 0.3rem;
+  color:#666;
+  padding:0.2rem 0px;border: 1px solid #e5e5e5;
+  border-top: none;
+  box-shadow: 0px 0px 0px #fff, 0px 0px 0px #fff, 0px 6px 10px rgb(251, 249, 249), 0px 0px 0px #fff;
+  -webkit-box-shadow: 0px 0px 0px #fff, 0px 0px 0px #fff, 0px 6px 10px rgb(251, 249, 249), 0px 0px 0px #fff;
+  -moz-box-shadow: 0px 0px 0px #fff, 0px 0px 0px #fff, 0px 6px 10px rgb(251, 249, 249), 0px 0px 0px #fff;
+  -ms-box-shadow: 0px 0px 0px #fff, 0px 0px 0px #fff, 0px 6px 10px rgb(251, 249, 249), 0px 0px 0px #fff;
+  -o-box-shadow: 0px 0px 0px #fff, 0px 0px 0px #fff, 0px 6px 10px rgb(251, 249, 249), 0px 0px 0px #fff;
+
+}
+
+.myShare{
+  background: #ffffff !important;
+  .am-action-sheet-share-list-item-icon{background: none;}
+}

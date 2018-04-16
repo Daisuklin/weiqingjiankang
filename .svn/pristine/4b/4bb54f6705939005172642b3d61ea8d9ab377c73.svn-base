@@ -1,0 +1,272 @@
+import React, {Component} from 'react'
+import {withRouter} from 'react-router'
+import {
+    WhiteSpace,
+    WingBlank,
+    Toast,
+    Flex,
+    Button,
+    List,
+    Popup,
+    Modal
+} from 'antd-mobile';
+import {Img} from 'commonComponent';
+import {common} from 'common';
+import * as orderApi from '../../home/api/order';
+import './orderDetail.less'
+const prompt = Modal.prompt;
+const Item = List.Item;
+const Brief = Item.Brief;
+class OrderDetail extends Component {
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            orderDetail: null
+        }
+    }
+
+    //去支付
+    gotoPay = (memberBargain) => {
+        const { orderSn, orderAmount } = memberBargain;
+        common.gotoPay({
+            paySn:orderSn,
+            orderTotalPrice:orderAmount
+        })
+    }
+
+
+
+    cancelOrder = () => {
+        Modal.alert('提示', '是否取消订单', [
+            { text: '取消' },
+            {
+                text: '确定',
+                onPress: () => {
+                    orderApi.cancleorder({
+                        ordersn:this.state.orderDetail.orderSn
+                    }).then(result => {
+                        if (result.result == 1) {
+                            // 取消成功
+                            window.location.reload();
+                        }else {
+                            Toast.fail(result.msg)
+                        }
+                    })
+                }
+            },
+        ]);
+    }
+
+    componentDidMount() {
+        const orderid = this.props.params.id;
+        orderApi.orderdetail({
+            orderid
+        }).then(result => {
+            if (result.result == 1) {
+                const data = result.data[0]
+                    this.setState({
+                        orderDetail: data
+                    });
+            }
+        })
+    }
+
+    getStatusShowText = (status) => {
+        const orderStatus = {
+            '0': '已取消',
+            '10': '待支付',
+            '20': '待发货',
+            '30': '待收货',
+            '40': '确认收货',
+            '50': '已提交',
+            '60': '待发货',
+        }
+        return orderStatus[status]
+    }
+
+    render() {
+        const {orderDetail} = this.state
+        let goodsPrice = 0;
+        if (!orderDetail) {
+            return null;
+        }
+        return (
+            <div className="wx-orderDetail">
+                <List className="order-list-content">
+                    <Item extra={<div style={{fontSize:'0.26rem'}}>{this.getStatusShowText(orderDetail.orderState)}</div>}
+                          multipleLine>
+                        <div style={{padding: '0.2rem 0px'}} className="item_list">
+                            <Flex  >
+                                <span className="item_list_name">订单号：{orderDetail.orderSn}</span>
+                                {/*<div className="item_list_protime">请于28分35秒内付款，超时订单自动关闭</div>*/}
+                            </Flex>
+                        </div>
+                    </Item>
+
+                    <WhiteSpace size="md" style={{background: '#f3f3f3'}}/>
+                    <Item
+                        multipleLine
+                        style={{background: 'url(./assets/img/weiqing/dizhi-02@2x.png) 0px bottom /100% 8px no-repeat'}}>
+                        <div style={{padding: '0.2rem 0px'}}>
+                            <Flex justify="between">
+                                <Flex.Item style={{flex: 0.2}}>
+                                    <img src="./assets/img/weiqing/dizhi-01@2x.png"
+                                         style={{width: '25px', height: '35px'}}/>
+                                </Flex.Item>
+                                <Flex.Item style={{flex: 3, marginLeft: '0px'}}>
+                                    <span>{orderDetail.address.trueName}</span>
+                                    <Brief>{orderDetail.address.areaInfo} {orderDetail.address.address}</Brief>
+                                </Flex.Item>
+                            </Flex>
+                        </div>
+
+                    </Item>
+                </List>
+                <WhiteSpace size="md" style={{background: '#f3f3f3'}}/>
+                <div>
+                    <List className='wx-order-shop' renderHeader={<div>{orderDetail.storeName}</div>}>
+                        {
+                            orderDetail.orderGoodsList.map((goods, index) => {
+                                goodsPrice += parseInt(goods.goodsPrice);
+                                // const showShip = null
+                                return <div key={index}><Item
+                                    multipleLine style={{
+                                    padding: '0.2rem 0.26rem 0.2rem 0.26rem',
+                                    borderBottom: '1px solid #e5e5e5'
+                                }}>
+                                    <Flex key={goods.specId} onClick={() => {
+                                        common.gotoGoodsDetail({
+                                            specId: goods.specId
+                                        })
+                                    }}>
+                                        <div style={{width: '1.5rem', height: '1.5rem'}}><Img src={goods.goodsImage}
+                                                                                              style={{
+                                                                                                  width: '1.5rem',
+                                                                                                  height: '1.5rem'
+                                                                                              }}/></div>
+                                        <div className="shop-list-box">
+                                            <div className="shop_name">{goods.goodsName}</div>
+                                            {/*<div className="shop_product">产品介绍</div>*/}
+                                            <div style={{fontSize: '0.26rem', color: '#666'}}>数量: {goods.goodsNum}</div>
+                                            <div style={{color: '#e9331e', fontSize: '0.3rem'}}>
+                                                ¥{goods.goodsPrice}</div>
+                                        </div>
+                                    </Flex>
+                                </Item>
+                                </div>
+                            })
+                        }
+                        {/*<Flex justify="end" style={{padding:'0.2rem 0.26rem'}}>
+                         <Button inline type="primary" style={{height:'0.6rem',lineHeight:'0.6rem',background:'#00a9e0',borderColor:'#00a9e0',fontSize:'0.28rem'}}>联系客服</Button>
+                         </Flex>*/}
+                    </List>
+                    <WhiteSpace size="md" style={{background: '#f3f3f3'}}/>
+                    <div>
+                        <List>
+                            <Item
+                                onClick={this.onSelectPayTypeClick}
+                                extra={orderDetail.paymentName}>
+                                支付方式
+                            </Item>
+                            {/* <Item
+                             onClick={this.onClickCoupon}
+                             extra="优惠券">
+                             优惠券
+                             </Item>*/}
+                            <Item onClick={() => this.onClickInvoice(invoiceShow)} extra={orderDetail.invoice}>
+                                发票信息
+                            </Item>
+                        </List>
+                    </div>
+
+                </div>
+                <Flex>
+                    <Flex.Item style={{flex: 2.5, borderRight: '1px solid #ddd'}}>
+                        <List className="extrared">
+                            <Item extra={`¥` + parseFloat(goodsPrice).toFixed(2)}>商品总额</Item>
+                            <Item extra={`+` + orderDetail.shippingFee}>运费</Item>
+                            <Item extra={`- ¥` + orderDetail.discount}>优惠金额</Item>
+                        </List>
+                    </Flex.Item>
+                </Flex>
+
+                <WhiteSpace size="md" style={{background: '#f3f3f3'}}/>
+                <Flex>
+                    <Flex.Item
+                        style={{background: '#fff', padding: '0.3rem 0.26rem', width: '100%', marginLeft: '0px'}}>
+                        <div className="order_all">
+                            <div className="order_all_price">合计： <span style={{
+                                fontSize: '0.28rem',
+                                color: '#e2536b'
+                            }}>{`¥` + orderDetail.orderTotalPrice}</span></div>
+                            <div className="order_all_data">下单时间：{orderDetail.createTimeStr}</div>
+                        </div>
+                    </Flex.Item>
+                </Flex>
+
+                <div className='wx-orderbar'>
+                    <Flex style={{width: '100%'}}>
+                        <Flex.Item  style={{flex: 1, textAlign: 'right'}}>
+                            {orderDetail.orderState != 10 ? <div><Button type='primary' inline  style={{
+                                height: '0.6rem',
+                                lineHeight: '0.6rem',
+                                fontSize: '0.28rem',
+                                color: '#fff',
+                                borderColor: '#00a9df',
+                                background:'#00a9df',
+                                padding: '0 0.1rem',
+                                width: '2rem', marginLeft: '0.2rem'
+                            }}>已支付</Button>< Button type='primary' inline className="btn_gotoSub" onClick={this.cancelOrder} style={{
+                                height: '0.6rem',
+                                lineHeight: '0.6rem',
+                                fontSize: '0.28rem',
+                                color: '#999',
+                                background: '#fff',
+                                borderColor: '#aaa',
+                                padding: '0 0.1rem',
+                                width: '1.5rem', marginLeft: '0.2rem'
+                            }}>取消订单</Button> </div>:
+                                <div>
+                                    <Button type='primary' inline className="btn_gotoSub" style={{
+                                        height: '0.6rem',
+                                        lineHeight: '0.6rem',
+                                        fontSize: '0.28rem',
+                                        color: '#999',
+                                        background: '#fff',
+                                        borderColor: '#aaa',
+                                        padding: '0 0.1rem',
+                                        width: '2rem', marginLeft: '0.2rem'
+                                    }}>微信好友代付</Button>
+                                    < Button type='primary' inline className="btn_gotoSub" onClick={this.cancelOrder} style={{
+                                        height: '0.6rem',
+                                        lineHeight: '0.6rem',
+                                        fontSize: '0.28rem',
+                                        color: '#999',
+                                        background: '#fff',
+                                        borderColor: '#aaa',
+                                        padding: '0 0.1rem',
+                                        width: '1.5rem', marginLeft: '0.2rem'
+                                    }}>取消订单</Button>
+                                    <Button type='warning' inline className="btn_gotoSub" style={{
+                                        height: '0.6rem',
+                                        lineHeight: '0.6rem',
+                                        fontSize: '0.28rem',
+                                        color: '#00a9df',
+                                        // background:'#e2536b',
+                                        borderColor: '#00a9df',
+                                        padding: '0 0.1rem',
+                                        width: '1.2rem', marginLeft: '0.2rem'
+                                    }} onClick={()=>this.gotoPay(orderDetail)}>去支付</Button></div>
+                            }
+                        </Flex.Item>
+                    </Flex>
+                </div>
+
+
+            </div>
+        )
+    }
+}
+
+export default withRouter(OrderDetail);

@@ -1,0 +1,31 @@
+.hottes_activity {
+  // position: relative;
+  padding-top: 0.88rem;
+  padding-bottom: 0.9rem;
+  .index-search {
+    position: fixed;
+    background: #ffffff;
+    top: 0;
+    left: 0;
+    height: 0.88rem;
+    width: 100%;
+    z-index: 1000000000;
+  }
+  .am-search-input{border:1px solid #e5e5e5;border-radius: 0.5rem;}
+  .index-search form{
+    background: #ffffff;
+    width: 100%;
+    /*.am-search-input{
+      flex:initial;
+      width: 85%;
+      left: 0.5em;
+    }*/
+  }
+    .am-list-item {
+    padding-left: 0;
+
+    .am-list-line {
+      padding-right: 0;
+    }
+  }
+}

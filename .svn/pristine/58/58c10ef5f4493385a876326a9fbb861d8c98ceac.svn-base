@@ -1,0 +1,57 @@
+.crowdFunding_progress{
+  .list-progress{
+    li {
+      position: relative;
+      list-style: none;
+    }
+    //li:first-child:before{ background:url("../../../assets/img/weiqing/wuliu-01@2x.png") no-repeat;}
+     li:before {
+      position: absolute;
+      left: -.6rem;
+      top: 0;
+      content: "";
+      width: .66666667rem;
+      height: .64rem;
+       background:url("../../../assets/img/weiqing/wuliu-01@2x.png") no-repeat;
+      background-size: 40% 40%;
+    }
+  li .time {
+    color: #999;
+    font-size: 0.24rem;
+    margin-bottom: .13333333rem;
+    font-weight: 400;
+
+  }
+     li p {
+      color: #666;
+      font-size: 0.26rem;
+      line-height: 0.35rem;
+      margin-bottom: .33333333rem;
+      word-break: break-all;
+    }
+     li:after {
+       position: absolute;
+       left: -0.48rem;
+       top: .29rem;
+       bottom: -0.35rem;
+       content: "";
+       width: .01333333rem;
+       border-left: 1px solid #999;
+    }
+    li .single-thumbs img {
+      float: left;
+      width: 2rem;
+      height: 2rem;
+      margin-right: .2rem;
+      margin-bottom: .2rem;
+    }
+
+  }
+  .clearfix:after, .clearfix:before {
+    content: "";
+    display: table;
+  }
+   .clearfix:after {
+    clear: both;
+  }
+}

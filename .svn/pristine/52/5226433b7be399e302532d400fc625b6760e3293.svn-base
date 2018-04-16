@@ -1,0 +1,201 @@
+/**
+ * 积分商城确认兑换
+ * Created by leimingtech-lhm on 2017/5/12.
+ */
+import React, {Component} from 'react'
+import {withRouter} from 'react-router'
+import {connect} from 'react-redux'
+import {Map} from 'immutable';
+import {
+    Modal,
+    WhiteSpace,
+    WingBlank,
+    Toast,
+    Flex,
+    Button,
+    List,
+    Switch,
+    Popup
+} from 'antd-mobile';
+import {Img} from 'commonComponent';
+import * as orderApi from '../api/pointsGoods';
+import {common} from 'common';
+import Shop from '../components/Shop';
+import OrderBar from '../components/OrderBar';
+
+const prompt = Modal.prompt;
+const Item = List.Item;
+const Brief = Item.Brief;
+
+import '../components/css/pointGoods.less'
+
+class Order extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            addressList: [],
+            cartVoList: []
+        }
+    }
+
+    onSubmitOrder = () => {
+
+        // 提交订单
+        const {
+            selectedAddress,
+            paytype,
+            isPd,
+            freight,
+            couponId,
+            invoiceId,
+            priceData,
+        } = this.props.order;
+        // 验证数据
+        if (!selectedAddress) {
+            Modal.fail('请先选择收货地址');
+            return;
+        }
+
+        // 如果使用余额支付，弹出密码输入框，，否则跳到
+        if (isPd == 1 && paytype == 1) {
+            prompt(
+                '请输入支付密码',
+                '', [{text: '取消'}, {
+                    text: '提交',
+                    onPress: passwd => {
+                        orderApi.chkPasswd({passwd}).then(result => {
+                            if (result.result == 1) {
+                                // 密码正确，继续提交订单
+                                this.submitOrder();
+                            } else {
+                                Toast.fail(result.msg);
+                            }
+                        })
+                    }
+                }],
+                'secure-text',
+            )
+
+        } else {
+            // 在线支持 提交订单
+            this.submitOrder();
+        }
+    }
+
+
+    onClickSelectedAddress = () => {
+        this.props.router.push('/address');
+    }
+
+
+    /*updateShip = ({ storeId, shipType }) => {
+     this.props.dispatch({
+     type: 'updateShip',
+     payload: {
+     storeId,
+     shipType
+     }
+     })
+
+     const {
+     isPd,
+     cartId,
+     selectedAddress,
+     couponId,
+     cartVoList
+     } = this.props.order;
+
+     const freight = cartVoList.map(cart => {
+     return cart.selectedShip + "|" + cart.storeId;
+     })
+
+     orderApi.getPrice({
+     cartIds: cartId,
+     cityId: selectedAddress.cityId,
+     isPd,
+     freight: freight.join(),
+     couponId
+     }).then(r => {
+     const priceData = r.data[0];
+     this.props.dispatch({
+     type: 'getPrice',
+     payload: priceData
+     })
+     })
+
+     }*/
+
+    componentDidMount() {
+        const {freight, isInit} = this.props.order;
+        if (!isInit) {
+            return;
+        }
+        const cartIds = this.props.params.cartId;
+        orderApi.confirmationOfIntegralOrder({cartIds: cartIds}).then(result => {
+            if (result.result == 1) {
+                const data = result.data[0];
+                this.setState({
+                    addressList: data.addressList,
+                    cartVoList: data.cartVoList
+                });
+            }
+        })
+    }
+
+    render() {
+        const {
+            cartVoList,
+            addressList
+        } = this.state;
+        return <div className='wx-order'>
+            <div className='fix-scroll hastitle' style={{paddingBottom: '1.1rem'}}>
+                <List style={{
+                    background: 'url(./assets/img/weiqing/dizhi-02@2x.png) no-repeat 0px bottom',
+                    paddingBottom: '0.07rem'
+                }}>
+                    <Item onClick={() => console.log(addressList)}
+                          arrow="horizontal"
+                          multipleLine>
+                        {
+                            addressList ? <div style={{padding: '0.2rem 0px'}}>
+                                <Flex justify="between">
+                                    <Flex.Item style={{flex: 0.2}}>
+                                        <img src="./assets/img/weiqing/dizhi-01@2x.png"
+                                             style={{width: '25px', height: '35px'}}/>
+                                    </Flex.Item>
+                                    <Flex.Item style={{flex: 3, marginLeft: '0px'}}>
+                                        <span>{addressList.trueName} &nbsp;&nbsp;{addressList.mobPhone}</span>
+                                        <Brief>{addressList.addressList} {addressList.address}</Brief>
+                                    </Flex.Item>
+                                </Flex>
+                            </div> : '请选择地址'
+                        }
+                    </Item>
+                </List>
+                <WhiteSpace size="md" style={{background: '#f3f3f3'}}/>
+                {
+                    cartVoList.map((shop, index) => {
+                        return <Shop updateShip={this.updateShip} key={index} data={shop}></Shop>
+                    })
+                }
+                <WhiteSpace size="md" style={{background: '#f3f3f3'}}/>
+                <Flex>
+                    <Flex.Item>
+                        <List className="extrared">
+                            <Item extra={`¥100`} onClick={() => console.log(confirmationOrder)}
+                                  style={{borderBottom: '1px solid #ddd'}}>配送方式</Item>
+                            <Item extra={`2000分`} className="span_integ">所需积分</Item>
+                        </List>
+                    </Flex.Item>
+                </Flex>
+            </div>
+            {/*<OrderBar onSubmitOrder={this.onSubmitOrder} totalPrice={createDate.totalPrice}></OrderBar>*/}
+        </div>
+    }
+}
+
+function mapStateToProps({order}) {
+    return {order};
+}
+
+export default withRouter(connect(mapStateToProps)(Order));

@@ -1,0 +1,27 @@
+body .am-list-item .am-list-line, #root .am-list-item .am-list-line, #container .am-list-item .am-list-line{padding-right: 0px;}
+.hottesListBox{
+  font-size: 0.24rem;padding: 0px 0.05rem;
+  .span_txt{position: absolute;display: block;width: 1rem;height: 0.4rem;
+    font-size:0.25rem;
+    color: #ffffff;
+border-radius: 0.2rem;
+    bottom: 0px;left:50%;
+    margin-left:-0.5rem;font-size: 0.28rem;
+  }
+  .bg_color1{background: #fa4041;}
+  .bg_color2{background: #fd5001;}
+  .bg_color3{background: #21e845;}
+  .bg_color4{background: #08afe4;}
+
+}
+.am-list-header{border-bottom: 1px solid #e6e6e6;}
+.homeNewGood{padding-left: 0.1rem;padding-right: 0.1rem;}
+.homeNewGood.am-grid-line .am-flexbox .am-flexbox-item:after{background: #ffffff;}
+.homeNewGood .am-grid-item{height: 2.8rem;}
+.homeNewGood .am-flexbox .am-flexbox-item .am-grid-item-content{padding-bottom: 0.3rem}
+.am-list-body{border: none;background: none;}
+.am-icon-xs {
+  position: relative;
+  top: 8px;
+}
+.am-list-body:after{border: none;}

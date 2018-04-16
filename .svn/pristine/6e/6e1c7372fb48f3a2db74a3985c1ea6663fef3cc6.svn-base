@@ -1,0 +1,70 @@
+.fix-scroll.hasbottom{padding-top: 0px;}
+.points_redeemNow{
+  background: #ffffff;
+  .redeeNow_img{}
+  .redeeNow_img .img{width: 1.62rem;height: 1.30rem;}
+  .reddemNow_name{
+    color: #252525;
+    font-size: 0.28rem;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    padding-bottom: 0.05rem;
+  }
+  .reddemNow_product{font-size: 0.24rem;color: #666666;text-overflow: ellipsis;padding-bottom: 0.05rem;
+    white-space: nowrap;
+    overflow: hidden;}
+  .redeeNow_weight{
+    color: #999;
+    font-size:0.24rem;
+  }
+  .redeeNow_integral{color: #e60012;font-size: 0.3rem;padding-bottom: 0.05rem;}
+  .redeeNow_stepper{min-width: 1rem;}
+  .am-list-line{padding-right: 0px !important;}
+  .am-list-item{padding-left: 0px ;}
+  .am-list-item.am-list-item-active{background: none;}
+
+  .integral_total{font-size: 0.28rem;
+    color: #666666;padding-left: 0.2rem;}
+  .confirm_exchange_box .am-list-content{padding: 0px;}
+  .confirm_exchange{height: 100%;background: #e70012;
+    color: #ffffff; }
+}
+
+
+.wx-goods-detail-list{
+  .am-list-body{border-top: none;}
+  .felx_btn_box{text-align: center;padding-bottom: 0.2rem;}
+  .felx_btn_box img:not(:last-child){margin-right: 0.2rem;}
+  .am-list-item{padding: 0rem 0px 0.25rem;}
+  .am-list-body:after{border-bottom: none;}
+  .text_product{
+    color: #333;font-size: 0.28rem;text-align: center;}
+}
+
+
+.am-modal.am-modal-transparent .am-modal-content .am-modal-body {
+  padding: 0 !important;
+}
+@media (device-width:375px) and (-webkit-min-device-pixel-ratio:2){
+  .imgDe{
+    width:7rem !important
+  }
+}
+@media screen and (device-aspect-ratio: 40/71) {
+  .imgDe{
+    width:5.5rem !important;
+    height:7.5rem !important;
+  }
+}
+.am-tabs-bar .am-tabs-tab{font-size: 0.26rem;
+  color: #333333;}
+body .am-tabs-bar .am-tabs-tab-active,
+#root .am-tabs-bar .am-tabs-tab-active,
+#container .am-tabs-bar .am-tabs-tab-active {
+  color: #00a9e0;
+  border-color: #00a9e0;
+}
+body .am-tabs-ink-bar, #root .am-tabs-ink-bar, #container .am-tabs-ink-bar{background: #00a9e0;}
+body .am-button-primary, #root .am-button-primary, #container .am-button-primary{background: #00a9e0;font-size: 0.25rem;border-color:#00a9e0;
+  height:0.6rem;line-height: 0.55rem;}

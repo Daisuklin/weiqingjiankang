@@ -1,0 +1,11 @@
+.cashier_list{
+  .cashier_list_item{
+    border-bottom: 1px solid #e5e5e5;
+    .am-list-line:after{border-bottom: none !important;}
+  }
+}
+.am-action-sheet{
+  .am-action-sheet-content{
+
+  }
+}

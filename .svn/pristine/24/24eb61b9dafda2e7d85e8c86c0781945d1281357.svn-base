@@ -1,0 +1,46 @@
+.wx-pay-result {
+  .am-list-item .am-list-line .am-list-content {
+    font-size: .28rem;
+  }
+  
+}
+.extrared_success{
+    border-right: 1px solid #e5e5e5;
+     .am-list-extra{
+        color:#e6000c !important;
+      font-size: 0.26rem;
+    } 
+  }
+
+.wx-orderSuccess{
+  .item_list{
+    .item_list_name{font-size: 0.28rem;
+      color: #333;}
+    .item_list_protime{font-size: 0.24rem;padding-top: 0.05rem;
+      color: #999;}
+  }
+  .order-list-content{
+    .am-list-content{font-size: 0.28rem;color:#333;}
+    .am-list-extra{font-size: 0.26rem;color:#999;}
+  }
+  .inputitem{
+    .am-input-label{font-size: 0.28rem;color:#333333;}
+    .am-input-control input{font-size: 0.26rem;color:#999;}
+  }
+  .wx-order-shop{
+    .am-list-body{border-color: #e5e5e5;}
+    .am-list-item{
+      .am-list-line:after{border-bottom: none !important;}
+      .shop-list-box{
+        padding-left: 0.2rem;
+        div{padding-bottom: 0.1rem;}
+        .shop_name{
+          font-size:0.28rem;color:#333;}
+        .shop_product{font-size: 0.26rem;color:#666;}
+
+      }
+    }
+  }
+}
+
+

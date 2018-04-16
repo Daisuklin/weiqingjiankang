@@ -1,0 +1,19 @@
+.wx-gotoSearch{
+  padding-bottom: 0.9rem;
+  .search_hot{
+    background: #ffffff;
+    padding: 0.2rem 0.26rem 0.1rem;
+    .search_hot_btn{
+      div{margin: 0px 0rem;padding-bottom: 0.2rem}
+    }
+  }
+.history_Search{
+  .am-list-body{
+    div{font-size: 0.22rem;color:#999;height: 0.9rem;line-height: 0.9rem;padding: 0px 0.3rem;border-bottom: 1px solid #e5e5e5;}
+  }
+
+}
+  .am-search{
+    .am-search-cancel{font-size: 0.28rem;}
+  }
+}

@@ -1,0 +1,175 @@
+/*登录界面*/
+.imgbackrground{
+  text-align: center;padding: 1.7rem 0px 0.12rem;
+  .text_p{font-size: 0.28rem;color:#333333;}
+}
+.geneLoginlist{
+  .am-list-item.am-input-item {
+    height: 0.9rem;
+    padding-left: 32px !important;
+    padding-right: 32px !important;
+    margin: 0.1rem 0.5rem;
+    font-size: 0.26rem;
+    color:#999999;
+  }
+  .am-list-item.am-input-item input{
+    font-size: 0.26rem;
+    color:#999999;
+  }
+  .am-list-item .am-input-label.am-input-label-5{width:auto}
+  .queryButton{
+    background: none;
+    padding: 30vh 0rem 0rem;
+    margin: 0px 0rem;
+    width: 100%;
+
+    .am-button-primary{background: #5491d2;font-size: 0.28rem;height: 0.7rem;line-height: 0.7rem;margin: 0px 0.5rem;}
+  }
+  @media screen and (device-aspect-ratio: 40/71) {
+    .queryButton{
+      padding: 18vh 0rem 0rem;
+    }
+  }
+.nameButtom{
+  .am-input-extra{max-height: 0.6rem;}
+}
+  .am-list-footer{padding-left: 0.5rem;}
+}
+/*绑定条形码*/
+.imgbackrground2{
+  text-align: center;padding: 0.85rem 0px 0.12rem;
+  .text_p{font-size: 0.28rem;color:#333333;}
+}
+.geneLoginlist2{
+  .am-list-item.am-input-item {
+    height: 0.9rem;
+    padding-left: 32px !important;
+    padding-right: 32px !important;
+    margin: 0.1rem 0.5rem;
+    font-size: 0.26rem;
+    color:#999999;
+  }
+  .am-list-item.am-input-item input{
+    font-size: 0.26rem;
+    color:#999999;
+    text-align: center;
+  }
+  .am-input-focus input{
+    text-align: left !important;
+  }
+  .am-list-item .am-input-label.am-input-label-5{width:auto}
+  .queryButton{
+    background: none;
+    padding: 39vh 0rem 0rem;
+    margin: 0px 0rem;
+    width: 100%;
+
+    .am-button-primary{background: #5491d2;font-size: 0.28rem;height: 0.7rem;line-height: 0.7rem;margin: 0px 0.5rem;}
+  }
+  .nameButtom{
+    .am-input-extra{max-height: 0.6rem;}
+  }
+  .am-list-footer{padding-left: 0.5rem;}
+}
+
+/*绑定电话*/
+.imgbackrground3{
+  text-align: center;padding: 0.85rem 0px 0.12rem;
+  .text_p{font-size: 0.28rem;color:#333333;}
+}
+.geneLoginlist3{
+  .am-list-item.am-input-item {
+    height: 0.9rem;
+    padding-left: 32px !important;
+    padding-right: 32px !important;
+    margin: 0.1rem 0.5rem;
+    font-size: 0.26rem;
+    color:#999999;
+  }
+  .am-list-item.am-input-item input{
+    font-size: 0.26rem;
+    color:#999999;
+
+  }
+  .am-list-item .am-input-label.am-input-label-5{width:auto}
+  .queryButton{
+    background: none;
+    padding: 0px 0rem;
+    margin: 0px 0rem;
+    position: fixed;
+    bottom:0.36rem;
+    left: 0px;
+    width: 100%;
+
+    .am-button-primary{background: #5491d2;font-size: 0.28rem;height: 0.7rem;line-height: 0.7rem;margin: 0px 0.5rem;}
+  }
+  .nameButtom{
+    .am-input-extra{max-height: 0.6rem;}
+  }
+  .am-list-footer{padding-left: 0.5rem;}
+}
+
+/*完善个人信息*/
+.personalinfomationlist{
+  padding-top: 0.2rem;
+  .am-list-item.am-input-item {
+    height: 0.9rem;
+    padding-left: 32px !important;
+    padding-right: 20px !important;
+    margin: 0.1rem 0.5rem;
+    font-size: 0.26rem;
+    color:#999999;
+  }
+  .am-list-item.am-input-item input{
+    font-size: 0.26rem;
+    color:#999999;
+
+  }
+  .am-list-item .am-input-label.am-input-label-5{width:auto}
+  .queryButton{
+    background: #f5f5f9;
+    padding: 0px 0rem 0.36rem;
+    margin: 0px 0rem;
+  /*  position: fixed;
+    bottom:0rem;
+    left: 0px;*/
+    width: 100%;
+
+    .am-button-primary{background: #5491d2;font-size: 0.28rem;height: 0.7rem;line-height: 0.7rem;margin: 0px 0.5rem;}
+  }
+  .nameButtom{
+    .am-input-extra{max-height: 0.6rem;}
+  }
+  .am-list-footer{padding-left: 0.5rem;}
+  .text_product{font-size: 0.22rem;color:#999;padding: 0.2rem 0.5rem;line-height: 0.3rem;}
+.am-list-item-middle .am-list-line{
+  .am-list-item{
+    padding-left: 0rem;
+    .am-list-content span,.am-list-extra{
+      font-size: 0.26rem !important;
+      color: #999999 !important;}
+  }
+}
+}
+
+/*基因查询报告结果*/
+.wx-queryResult-detail{
+  padding-top: 0.9rem;
+  .am-list-body div:not(:last-child) .am-list-line:after{border-bottom: none;}
+  .queryResult_top{padding-top: 0.25rem;
+  .am-list-content{color: #666666;font-size:0.28rem;}
+  }
+  .queryResult_center{
+    border-bottom: 1px solid #e8e8e8;
+    .product_img{float:left;}
+    .product_btn{float:left;padding-left: 0.4rem;padding-top: 0.87rem;}
+  }
+  /*步骤器修改样式*/
+  .stepsBox{
+    .am-steps-head, am-steps-tail{padding-top: 0.2rem;}
+    .am-steps-main .am-steps-title{padding: 0.1rem 0 0.1rem;}
+    .am-steps-main{min-height: 100px;}
+    .am-steps-item:not(:last-child) .am-steps-main{border-bottom: 1px solid #eee;}
+  }
+
+}

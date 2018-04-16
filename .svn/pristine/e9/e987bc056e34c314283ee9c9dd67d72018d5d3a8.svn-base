@@ -1,0 +1,260 @@
+/**
+ * 抽奖支持
+ * Created by leimingtech-lhm on 2017/5/12.
+ */
+import React, {Component} from 'react'
+import {Map} from 'immutable';
+import {createForm} from 'rc-form';
+import {
+    Modal,
+    WhiteSpace,
+    WingBlank,
+    Toast,
+    Flex,
+    Button,
+    List,
+    Radio,
+    Checkbox,
+    InputItem,
+    NoticeBar
+} from 'antd-mobile';
+import {Img} from 'commonComponent';
+import {common, utils} from 'common';
+import * as crowdFundingApi from '../api/crowdFundingApi'
+import './crowdFundingFree.less'
+
+const prompt = Modal.prompt;
+const Item = List.Item;
+const Brief = Item.Brief;
+const RadioItem = Radio.RadioItem;
+const regexFloats = /^[0-9]+(.[0-9]{2})?$/; //正实数正则
+const regexFloat = /^[0-9]+(.[0-9]{1})?$/; //正实数正则
+const regex = /^[0-9]?$/; //正实数正则
+const AgreeItem = Checkbox.AgreeItem;
+
+class CrowdLuck extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            raiseDetail: Map(),
+            raiseMoney: 0,
+            remark: '',
+            init: false,
+            raiseMoneyError: false,
+            remarkError: false,
+            hasError: true,
+            isDisabled:false,
+            isCheckBox:false
+        }
+    }
+    onisCheckBox=(isCheckBox)=>{
+        this.setState({
+            isCheckBox: !isCheckBox
+        })
+    }
+    onSubmit = () => {
+        console.log(this.state.isCheckBox)
+        if(!this.state.isCheckBox){
+            Toast.info('请选择协议！', 1);
+            return false;
+        }
+        /*订单重复提交拦截*/
+        if(this.state.isDisabled){
+            return
+        }
+        this.setState({
+            isDisabled:true
+        });
+
+        /*订单重复提交拦截*/
+        if (this.state.hasError) {
+            crowdFundingApi.raiseOrder({
+                raiseItemId:this.props.params.raiseItemId,
+                raiseMoney:this.state.raiseMoney,
+                remark:this.state.remark,
+                addressId:""
+            }).then(result => {
+                if (result.result == 1) {
+                    Toast.success('订单提交成功');
+                    const orderPay=result.data.orderPay;
+                    window.location.href='/mall/payment.html#/cashierList/'+orderPay.paySn+'/'+orderPay.payAmount;
+                } else {
+                    this.setState({
+                        isDisabled : false
+                    });
+                    Toast.fail(result.msg, 1);
+                }
+            })
+        }
+    }
+
+    validateStr = (rule, value, callback) => {
+        if (value && value.length > 50) {
+            callback(
+                this.setState({
+                    remarkError: true,
+                    hasError: false
+                })
+            );
+        } else {
+            this.setState({
+                remark: value,
+                remarkError: false,
+                hasError: true
+            })
+        }
+    }
+
+    validateNum = (rule, value, callback) => {
+        if (regexFloats.test(value) || regex.test(value) || regexFloat.test(value)) {
+            value = utils.changeTwoDecimal_f(value);
+        } else {
+            callback(this.setState({
+                raiseMoneyError: true,
+                hasError: false
+            }));
+        }
+        if (value && value.length > 10) {
+            callback(this.setState({
+                raiseMoneyError: true,
+                hasError: false
+            }));
+        } else if (regexFloats.test(value) || regex.test(value) || regexFloat.test(value)) {
+            value = utils.changeTwoDecimal_f(value);
+            this.setState({
+                raiseMoney: value,
+                raiseMoneyError: false,
+                hasError: true
+            })
+        } else {
+            callback(this.setState({
+                raiseMoneyError: true,
+                hasError: false
+            }));
+        }
+    }
+
+
+    showBar = (state, message) => {
+        if (state) {
+            return <NoticeBar icon={null}>{message}</NoticeBar>
+        }
+    }
+
+    componentDidMount() {
+        const raiseItemId = this.props.params.raiseItemId;
+        crowdFundingApi.raiseTypeDetail({raiseItemId: raiseItemId}).then(result => {
+            if (result.result == 1) {
+                const raiseDetail = result.data.raiseItem;
+                this.setState({
+                    raiseDetail: raiseDetail,
+                    raiseMoney: raiseDetail.minSupportPrice,
+                    init: true
+                });
+            }
+        })
+    }
+
+    render() {
+        if (!this.state.init) {
+            return null;
+        }
+        const {raiseDetail,isCheckBox} = this.state;
+        const {getFieldProps} = this.props.form;
+        return <div className='wx-order'>
+            <div className='fix-scroll hastitle' style={{paddingBottom: '1.1rem'}}>
+
+                <div className="points_crowfundingchange">
+                    <div className="corowd_price">{raiseDetail.raiseName}</div>
+                    <div className="corowd_product">回报内容：<br/>{raiseDetail.itemDescription}</div>
+                </div>
+
+                <WhiteSpace size="md" style={{background: '#f3f3f3'}}/>
+                <Flex>
+                    <Flex.Item>
+                        <form>
+                            <List className="crowd_extrared">
+                                <Item extra={utils.changeTwoDecimal_f(raiseDetail.minSupportPrice) + `元`}>支持金额：</Item>
+                                <InputItem
+                                    {...getFieldProps('raiseMoney', {
+                                        initialValue: utils.changeTwoDecimal_f(raiseDetail.minSupportPrice),
+                                        rules: [
+                                            {required: false, message: '请输入自定义金额'},
+                                            {validator: this.validateNum},
+                                        ],
+                                    })}
+                                    clear
+                                    placeholder="自定义金额"
+                                    className="inputItem"
+                                >自定义金额：
+                                </InputItem>
+                                {this.showBar(this.state.raiseMoneyError, "请输入" + utils.changeTwoDecimal_f(raiseDetail.minSupportPrice) + "-" + utils.changeTwoDecimal_f(1000000) + "的数字")}
+                                <WhiteSpace size="md" style={{background: '#f3f3f3'}}/>
+                                <InputItem
+                                    {...getFieldProps('remark', {
+                                        rules: [
+                                            {required: false, message: '给项目发起人捎句话'},
+                                            {validator: this.validateStr},
+                                        ],
+                                    })}
+                                    clear
+                                    placeholder="给项目发起人捎句话"
+                                    className="inputItem remarks"
+                                >备注：</InputItem>
+                                {this.showBar(this.state.remarkError, "最多输入50个字符")}
+                            </List>
+                        </form>
+                    </Flex.Item>
+                </Flex>
+                <WhiteSpace size="md" style={{background: '#f3f3f3'}}/>
+                <div className="points_confirmechange2">
+                    <div className="corowd_price2">风险提示：</div>
+                    <div className="txt">
+                        请您务必审慎阅读、充分理解协议中相关条款内容，其中包括：<br/>
+                        1、风险提示条款和特别提示条款；<br/>
+                        2、与您约定法律适用和管辖的条款；<br/>
+                        3、其他以粗体标识的重要条款。<br/>
+                        如您不同意相关协议、公告、规则、操作流程和项目页面承诺，您有权选择不支持；一旦选择支持，即视为您已确知并完全同意相关协议。
+                    </div>
+                </div>
+                <Flex style={{padding: '0rem 0px'}}>
+                    <Flex.Item>
+                        <AgreeItem className="my-radio" data-seed="logId" onChange={()=>this.onisCheckBox(isCheckBox)} style={{padding: '0.26rem 0', color: '#333'}}>
+                            阅读并同意 <a onClick={(e) => { e.preventDefault(); alert('agree it'); }}>《支持者协议》</a>
+                        </AgreeItem>
+                    </Flex.Item>
+                </Flex>
+            </div>
+            <div style={{
+                position: 'fixed',
+                bottom: '0px',
+                left: '0px',
+                width: '100%',
+                height: '0.9rem',
+                lineHeight: '0.9rem',
+                overflow: 'hidden'
+            }} className="crowd_btn">
+                <Flex justify="between" style={{background:'#fff'}}>
+                    <List.Item style={{flex: 3,minHeight:'0.9rem'}}>
+                        <div className="integral_total">金额总计：￥{utils.changeTwoDecimal_f(this.state.raiseMoney)}</div>
+                    </List.Item>
+                    <List.Item style={{flex: 1.5, paddingLeft: '0.2rem'}} className="confirm_exchange_box">
+                        <Button className="confirm_exchange" onClick={() => this.onSubmit()} style={{
+                            backgroundColor: '#e1536b',
+                            borderColor:'#e1536b',
+                            fontSize: '0.28rem',
+                            color: '#fff',
+                            height: '0.9rem',
+                            borderRadius: '0px',
+                            border: 'none',
+                            lineHeight: '0.9rem'
+                        }}>去支付</Button>
+                    </List.Item>
+                </Flex>
+            </div>
+        </div>
+    }
+}
+
+
+export default createForm()(CrowdLuck);

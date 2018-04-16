@@ -1,0 +1,20 @@
+.wx-ginsegorderlist {
+  .orderitem {
+    .paystaus {
+      color: red;
+    }
+  }
+
+  .am-segment {
+    height: 1rem;
+  }
+
+
+}
+.ginsegorderlist-header {
+  top: 0;
+  width: 100%;padding: 0.1rem 0rem 0rem;
+  .am-segment-item{
+    color: #333;font-size: 0.3rem;background: #ffffff;border: none;border-bottom:2px solid #ffffff ;border-radius: 0px}
+  .am-segment-item-selected{background:#ffffff;color:#00a9df !important;border-bottom-color: #00a9df }
+}

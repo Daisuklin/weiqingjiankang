@@ -1,0 +1,30 @@
+.wx-goods-search-page {
+  font-size: .24rem;
+  height: 100%;
+  width: 100%;
+
+  @media screen and (device-aspect-ratio: 40/71) {
+    .rsale{
+      margin-left:0.3rem !important
+    }
+    .rsale a.am-button{font-size: 0.24rem;color: #ffffff;
+      width:1rem;height: 0.5rem;line-height: 0.5rem;padding: 0px;}
+  }
+  .am-list-view-scrollview-content{
+    position: static !important;
+    //.bargainImgl{position: relative;}
+    .bargainImgl .bargainSpantit{position: absolute;left: 0rem;top:0rem;border-radius: 0.3rem;}
+  }
+}
+body .am-button-primary, #root .am-button-primary, #container .am-button-primary{background: #00a9e0;font-size: 0.25rem;border-color:#00a9e0;
+  height:0.5rem;line-height: 0.5rem;}
+
+/*发票详情*/
+.wx-invoice-detail-group{
+  .am-list-body div:not(:last-child) .am-list-line:after{border-bottom: none;}
+  .invoice_input{
+    .am-input-control{
+      input{font-size: 0.26rem;padding-left: 0.29rem;}
+    }
+  }
+}

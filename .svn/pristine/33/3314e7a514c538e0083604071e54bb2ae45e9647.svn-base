@@ -1,0 +1,82 @@
+import React, { Component } from 'react'
+import {
+  List,
+  Flex,
+  Button,
+  WingBlank,
+  WhiteSpace
+} from 'antd-mobile';
+import { Img } from 'commonComponent';
+import { common } from 'common';
+import './GoodsSpec.less'
+
+/**
+ * 商品评价
+ */
+export default function({ goodsDetailInfo, gotoEvaluateList, gotoConsultation }) {
+
+  const { evaluateGoodsList } = goodsDetailInfo;
+
+  const goodsEvalue = goodsDetailInfo.evaluate / 5;
+  const evalue = goodsEvalue.toFixed(2) * 100;
+  return <List className="goods-Detail-evaluate">
+    <List.Item onClick={()=>gotoEvaluateList(goodsDetailInfo)} extra={`${evalue}%好评`} arrow="horizontal" style={{borderBottom:'1px solid #e5e5e5'}}>
+	      商品评价({`${goodsDetailInfo.commentnum}`})
+    </List.Item>
+    <div className="Detail-evaluate">
+    {
+      evaluateGoodsList && evaluateGoodsList.map((item, index) => {
+        const gevalImageShow = item.gevalImage && item.gevalImage.split(',').map((image, i) => <Img key={i} src={image} style={{width:'1.5rem',height:'1.5rem',marginRight:'0.1rem'}}/>)
+        return <WingBlank key={index} style={{padding:'0.2rem 0px'}}>
+          <WhiteSpace></WhiteSpace>
+          <Flex>
+            <Flex.Item>
+              {
+                [...Array(item.gevalScore)].map((_, i) => {
+                  return <img key={i} src={`./assets/img/weiqing/xingxing-01@2x.png`} style={{ width: '.23rem',height:'.22rem',paddingRight:'0.14rem'  }} />
+                })
+              }
+              {
+                [...Array(5-item.gevalScore)].map((_, i) => {
+                  return <img key={i} src={`./assets/img/weiqing/xingxing-02@2x.png`} style={{ width: '.23rem',height:'.22rem',paddingRight:'0.14rem' }} />
+                })
+              }
+            </Flex.Item>
+            <Flex.Item style={{textAlign:'right'}}>
+              {item.gevalFrommembername}
+            </Flex.Item>
+          </Flex>
+          <WhiteSpace></WhiteSpace>
+          <div style={{fontSize:'0.26rem',color:'#666',lineHeight:'0.45rem'}}>{item.gevalContent}</div>
+          <WhiteSpace></WhiteSpace>
+          {
+            item.gevalImage && <div className="gevalImageShow_img">{gevalImageShow}</div>
+          }
+        </WingBlank>
+      })
+    }
+    </div>
+    <List.Item>
+      <Flex style={{paddingBottom:'0.2rem'}}>
+        <Flex.Item>
+          <Button onClick={()=>gotoEvaluateList(goodsDetailInfo)} style={{
+            height:'0.6rem',
+              lineHeight:'0.6rem',
+              color:'#333',
+              fontSize:'0.22rem',
+              borderColor:'#e6e6e6'
+          }}>商品晒单 ({goodsDetailInfo.commentnum})</Button>
+        </Flex.Item>
+        <Flex.Item>
+          <Button onClick={()=>gotoConsultation(goodsDetailInfo)} style={{
+              height:'0.6rem',
+              lineHeight:'0.6rem',
+              color:'#333',
+              fontSize:'0.22rem',
+              borderColor:'#e6e6e6'
+          }}>购买咨询 ({goodsDetailInfo.consultationNum})</Button>
+        </Flex.Item>
+      </Flex>
+    </List.Item>
+  </List>
+}
